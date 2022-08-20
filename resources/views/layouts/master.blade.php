@@ -18,7 +18,15 @@
         <li class="nav-item"><a href="{{route('index')}}" class="nav-link">Все товары</a></li>
         <li class="nav-item"><a href="{{route('categories')}}" class="nav-link">Категории</a></li>
         <li class="nav-item"><a href="{{route('basket')}}" class="nav-link">В корзину</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Панель Администратора</a></li>
+
+        @guest()
+            <li class="nav-item"><a href="{{route('login')}}" class="nav-link">Вход / Регистрация</a></li>
+        @endguest
+
+        @auth()
+            <li class="nav-item"><a href="{{route('logout')}}" class="nav-link">Выход</a></li>
+        @endauth
+
     </ul>
 </header>
 <div class="container">
