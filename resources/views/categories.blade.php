@@ -6,7 +6,7 @@
             <a href="{{route('category', $category->code)}}">{{$category->name}}</a>
             <p>{{$category->description}}</p>
         </div>
-        @endforeach
+    @endforeach
 @endsection
 
 

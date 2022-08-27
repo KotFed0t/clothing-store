@@ -18,8 +18,8 @@ class CheckIsAdmin
     public function handle(Request $request, Closure $next)
     {
         $user = Auth::user();
-        if ($user) {
-            if ($user->roles->contains('name', 'admin')) {
+        if ($user) {//проверка аутентификации
+            if ($user->roles->contains('name', 'admin')) {//проверка роли
                 return $next($request);
             };
         }

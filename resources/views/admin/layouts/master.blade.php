@@ -13,23 +13,13 @@
 
 <header class="d-flex justify-content-center py-3 bg-light">
     <ul class="nav nav-pills">
-        <li class="nav-item"><a href="{{route('index')}}" class="nav-link active" aria-current="page">Магазин одежды</a>
+        <li class="nav-item"><a href="{{route('admin.home')}}" class="nav-link active" aria-current="page">Админ панель</a>
         </li>
-        <li class="nav-item"><a href="{{route('index')}}" class="nav-link">Все товары</a></li>
-        <li class="nav-item"><a href="{{route('categories')}}" class="nav-link">Категории</a></li>
-        <li class="nav-item"><a href="{{route('basket')}}" class="nav-link">В корзину</a></li>
+        <li class="nav-item"><a href="{{route('index')}}" class="nav-link">На главную магазина</a></li>
+        <li class="nav-item"><a href="{{route('index')}}" class="nav-link">Категории</a></li>
+        <li class="nav-item"><a href="{{route('admin.orders')}}" class="nav-link">Заказы</a></li>
+        <li class="nav-item"><a href="{{route('logout')}}" class="nav-link">Выход</a></li>
 
-        @guest()
-            <li class="nav-item"><a href="{{route('login')}}" class="nav-link">Вход / Регистрация</a></li>
-        @endguest
-
-        @can('show-admin-btn')
-            <li class="nav-item"><a href="{{route('admin.home')}}" class="nav-link">Админ панель</a></li>
-        @endcan
-
-        @auth()
-            <li class="nav-item"><a href="{{route('logout')}}" class="nav-link">Выход</a></li>
-        @endauth
 
     </ul>
 </header>

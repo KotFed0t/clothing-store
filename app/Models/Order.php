@@ -40,4 +40,8 @@ class Order extends Model
             return false;
         }
     }
+
+    public function getStatusName() {
+        return Status::where('id', $this->status)->first()->name;
+    }
 }

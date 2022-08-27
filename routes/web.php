@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\BasketController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BasketController;
 use App\Http\Controllers\MainController;
-use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -14,6 +15,8 @@ Route::group([
     'prefix' => 'admin'
 ], function () {
     Route::get('/home', [AdminController::class, 'home'])->name('admin.home');
+    Route::get('/orders', [OrderController::class, 'showOrders'])->name('admin.orders');
+    Route::get('/order/{id}', [OrderController::class, 'showOrderDetails'])->name('admin.orderDetails');
 });
 
 Route::get('/basket', [BasketController::class, 'basket'])->name('basket');
