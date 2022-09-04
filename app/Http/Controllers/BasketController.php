@@ -18,6 +18,7 @@ class BasketController extends Controller
         return view('basket', compact('order'));
     }
 
+    //только авторизованные пользователи
     public function basketPlace()
     {
         $orderId = session('orderId');
@@ -28,17 +29,28 @@ class BasketController extends Controller
         return view('basketOrder', compact('order'));
     }
 
+    //только авторизованные пользователи
     public function basketConfirm(Request $request)
     {
+        $data = $request->validate([
+            'country' => ['required', 'string', 'min:2', 'max:50'],
+            'city' => ['required', 'string', 'min:2', 'max:50'],
+            'address' => ['required', 'string', 'min:2', 'max:100'],
+            'postal_code' => ['required', 'digits:6']
+        ]);
+
+        $user = auth()->user();
+        $data['user_id'] = $user->id;
+        $data['status'] = 1;
+
         $orderId = session('orderId');
         if (is_null($orderId)) {
             return redirect()->route('index');
         }
 
         $order = Order::find($orderId);
-        $result = $order->saveOrder($request->name, $request->phone);
-
-        if ($result) {
+        if ($order->update($data)) {
+            session()->forget('orderId');
             session()->flash('success', 'Ваш заказ принят в обработку!');
         } else {
             session()->flash('warning', 'Произошла ошибка');

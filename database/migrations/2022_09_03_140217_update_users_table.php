@@ -17,6 +17,7 @@ return new class extends Migration
             $table->dropColumn('email_verified_at');
             $table->dropColumn('remember_token');
             $table->string('email_status')->nullable();
+            $table->string('phone')->nullable();
         });
     }
 
@@ -31,6 +32,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->dropColumn('email_status');
+            $table->dropColumn('phone');
         });
     }
 };

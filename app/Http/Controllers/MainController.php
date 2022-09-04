@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -31,6 +32,19 @@ class MainController extends Controller
     {
         //$product = Product::where('code', $product)->first();
         return view('product', compact('product'));
+    }
+
+    public function showOrders()
+    {
+        $orders = auth()->user()->orders;
+        return view('ordersHistory.orders', compact('orders'));
+    }
+
+    public function showOrderDetails($orderId) {
+        $order = Order::findOrFail($orderId);
+        $products = $order->products;
+        return view('admin.orderDetails', compact('order', 'products'));
+
     }
 
 }

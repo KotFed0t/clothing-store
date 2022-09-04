@@ -50,6 +50,7 @@ class AuthController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'min:2', 'max:30'],
             'email' => ['required', 'email', 'string'],
+            'phone' => ['required', 'regex:/(\+7|8)[\s(]*\d{3}[)\s]*\d{3}[\s-]?\d{2}[\s-]?\d{2}/'],
             'password' => [
                 'required',
                 'confirmed',

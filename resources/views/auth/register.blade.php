@@ -31,6 +31,15 @@
                                     @enderror
 
                                     <div class="form-outline mb-4">
+                                        <input name="phone" value="{{old('phone')}}" type="tel" id="form3Example3cg" class="form-control form-control-lg" />
+                                        <label class="form-label" for="form3Example3cg">Телефон</label>
+                                    </div>
+
+                                    @error('phone')
+                                    <p class="text-red-500">{{$message}}</p>
+                                    @enderror
+
+                                    <div class="form-outline mb-4">
                                         <input name="password" type="password" id="form3Example4cg" class="form-control form-control-lg" />
                                         <label class="form-label" for="form3Example4cg">Пароль</label>
                                     </div>

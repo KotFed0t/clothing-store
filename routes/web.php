@@ -45,6 +45,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/basket/place', [BasketController::class, 'basketPlace'])->name('basket-place');
     Route::post('/basket/place', [BasketController::class, 'basketConfirm'])->name('basket-confirm');
+
+    Route::get('/orders', [MainController::class, 'showOrders'])->name('orders');
+    Route::get('/orders/{id}', [MainController::class, 'showOrderDetails'])->name('orderDetails');
 });
 
 Route::middleware('guest')->group(function () {
@@ -57,7 +60,7 @@ Route::middleware('guest')->group(function () {
 Route::get('/email_confirmation', [AuthController::class, 'emailConfirmation'])->name('email_confirmation');
 
 Route::get('/categories', [MainController::class, 'categories'])->name('categories');
-Route::get('/{category}', [MainController::class, 'category'])->name('category');
+Route::get('/categories/{category}', [MainController::class, 'category'])->name('category');
 
-Route::get('{category}/{product?}', [MainController::class, 'product'])->name('product');
+Route::get('/categories/{category}/{product?}', [MainController::class, 'product'])->name('product');
 

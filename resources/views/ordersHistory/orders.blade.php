@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+@extends('layouts.master')
 
 @section('content')
     <h1 class="text-center mt-5">Заказы</h1>
@@ -26,7 +26,7 @@
                     <td>{{$order->updated_at}}</td>
                     <td>{{$order->getFullPrice()}}</td>
                     <td>{{$order->getStatusName()}}</td>
-                    <td><a href="{{route('admin.orderDetails', $order->id)}}">Открыть</a></td>
+                    <td><a href="{{route('orderDetails', $order->id)}}">Открыть</a></td>
                 </tr>
             @endforeach
         @endisset

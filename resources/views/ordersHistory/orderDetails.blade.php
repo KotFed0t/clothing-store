@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+@extends('layouts.master')
 
 @section('content')
     <h3 class="text-center mt-5">Детали заказа</h3>

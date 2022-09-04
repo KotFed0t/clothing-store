@@ -19,6 +19,10 @@
         <li class="nav-item"><a href="{{route('categories')}}" class="nav-link">Категории</a></li>
         <li class="nav-item"><a href="{{route('basket')}}" class="nav-link">В корзину</a></li>
 
+        @auth()
+            <li class="nav-item"><a href="{{route('orders')}}" class="nav-link">История заказов</a></li>
+        @endauth
+
         @guest()
             <li class="nav-item"><a href="{{route('login')}}" class="nav-link">Вход / Регистрация</a></li>
         @endguest
