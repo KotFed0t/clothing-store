@@ -35,6 +35,10 @@ Route::group([
     Route::post('/products/create', [ProductController::class, 'createProduct'])->name('admin.createProduct');
     Route::get('/products/{id}/delete', [ProductController::class, 'deleteProduct'])->name('admin.deleteProduct');
     Route::get('/products/{id}', [ProductController::class, 'showProduct'])->name('admin.showProduct');
+
+    Route::get('/tickets', [AdminController::class, 'tickets'])->name('admin.tickets');
+    Route::get('/tickets/{id}', [AdminController::class, 'ticketDetails'])->name('admin.ticketDetails');
+    Route::post('/tickets/response', [AdminController::class, 'ticketResponse'])->name('admin.ticketResponse');
 });
 
 Route::get('/basket', [BasketController::class, 'basket'])->name('basket');
@@ -56,6 +60,9 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register_process', [AuthController::class, 'register'])->name('register_process');
 });
+
+Route::get('/feedback', [MainController::class, 'showFeedback'])->name('showFeedback');
+Route::post('/feedback', [MainController::class, 'saveFeedback'])->name('saveFeedback');
 
 Route::get('/email_confirmation', [AuthController::class, 'emailConfirmation'])->name('email_confirmation');
 

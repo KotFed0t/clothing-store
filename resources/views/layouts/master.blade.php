@@ -18,6 +18,7 @@
         <li class="nav-item"><a href="{{route('index')}}" class="nav-link">Все товары</a></li>
         <li class="nav-item"><a href="{{route('categories')}}" class="nav-link">Категории</a></li>
         <li class="nav-item"><a href="{{route('basket')}}" class="nav-link">В корзину</a></li>
+        <li class="nav-item"><a href="{{route('showFeedback')}}" class="nav-link">Обратная связь</a></li>
 
         @auth()
             <li class="nav-item"><a href="{{route('orders')}}" class="nav-link">История заказов</a></li>
