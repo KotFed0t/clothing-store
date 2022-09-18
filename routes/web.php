@@ -61,7 +61,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/register_process', [AuthController::class, 'register'])->name('register_process');
 });
 
-Route::get('/payment/callback', [MainController::class, 'showFeedback'])->name('paymentCallback');
+Route::post('/payment/callback', [BasketController::class, 'paymentCallback'])->name('paymentCallback');
 
 Route::get('/feedback', [MainController::class, 'showFeedback'])->name('showFeedback');
 Route::post('/feedback', [MainController::class, 'saveFeedback'])->name('saveFeedback');

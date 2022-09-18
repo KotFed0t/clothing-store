@@ -38,12 +38,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         DB::table('statuses')->insert([
-            'id' => 0,
             'name' => 'Не оформлен'
         ]);
 
         DB::table('statuses')->insert([
-            'id' => 1,
             'name' => 'Оформлен'
         ]);
 

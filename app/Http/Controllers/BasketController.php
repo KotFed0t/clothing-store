@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class BasketController extends Controller
 {
-    public function basket()
+    public function basket(Request $request)
     {
         $orderId = session('orderId');
         $order = null;
@@ -17,6 +17,7 @@ class BasketController extends Controller
             $order = Order::findOrFail($orderId);
         }
         return view('basket', compact('order'));
+
     }
 
     //только авторизованные пользователи
@@ -42,7 +43,6 @@ class BasketController extends Controller
 
         $user = auth()->user();
         $data['user_id'] = $user->id;
-        $data['status'] = 1;
 
         $orderId = session('orderId');
         if (is_null($orderId)) {
@@ -52,24 +52,20 @@ class BasketController extends Controller
         $order = Order::find($orderId);
 
         $payment = new PaymentService();
-        $payment->createPayment($order, $user->id);
-        dd($payment);
+        $link = $payment->createPayment($order, $user->id);
 
-//        if ($order->update($data)) {
-//            session()->forget('orderId');
-//            session()->flash('success', 'Ваш заказ принят в обработку!');
-//        } else {
-//            session()->flash('warning', 'Произошла ошибка');
-//        }
-//
-//        return redirect()->route('index');
+        //можно добавить новый статус 'ожидает оплаты'
+        $order->update($data);
+        session()->forget('orderId');
+        session()->flash('success', 'Ваш заказ принят в обработку!');
 
+        return redirect($link);
     }
 
-    public function paymentCallback()
+    public function paymentCallback(Request $request)
     {
         $payment = new PaymentService();
-        $payment->callback();
+        $payment->callback($request->ip());
     }
 
     public function basketAdd($productId)

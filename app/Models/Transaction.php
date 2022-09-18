@@ -14,6 +14,8 @@ class Transaction extends Model
         'order_id',
         'price',
         'description',
-        'status'
+        'status',
+        'payment_id',
+        'rrn'
     ];
 }
