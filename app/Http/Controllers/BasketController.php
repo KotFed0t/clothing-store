@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Services\PaymentService;
 use Illuminate\Http\Request;
 
 class BasketController extends Controller
@@ -49,15 +50,26 @@ class BasketController extends Controller
         }
 
         $order = Order::find($orderId);
-        if ($order->update($data)) {
-            session()->forget('orderId');
-            session()->flash('success', 'Ваш заказ принят в обработку!');
-        } else {
-            session()->flash('warning', 'Произошла ошибка');
-        }
 
-        return redirect()->route('index');
+        $payment = new PaymentService();
+        $payment->createPayment($order, $user->id);
+        dd($payment);
 
+//        if ($order->update($data)) {
+//            session()->forget('orderId');
+//            session()->flash('success', 'Ваш заказ принят в обработку!');
+//        } else {
+//            session()->flash('warning', 'Произошла ошибка');
+//        }
+//
+//        return redirect()->route('index');
+
+    }
+
+    public function paymentCallback()
+    {
+        $payment = new PaymentService();
+        $payment->callback();
     }
 
     public function basketAdd($productId)

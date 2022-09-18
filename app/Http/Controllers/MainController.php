@@ -47,7 +47,7 @@ class MainController extends Controller
     {
         $order = Order::findOrFail($orderId);
         $products = $order->products;
-        return view('admin.orderDetails', compact('order', 'products'));
+        return view('ordersHistory.orderDetails', compact('order', 'products'));
     }
 
     public function showFeedback()

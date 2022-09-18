@@ -48,7 +48,7 @@ Route::post('/basket/remove/{id}', [BasketController::class, 'basketRemove'])->n
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/basket/place', [BasketController::class, 'basketPlace'])->name('basket-place');
-    Route::post('/basket/place', [BasketController::class, 'basketConfirm'])->name('basket-confirm');
+    Route::post('/basket/confirm', [BasketController::class, 'basketConfirm'])->name('basket-confirm');
 
     Route::get('/orders', [MainController::class, 'showOrders'])->name('orders');
     Route::get('/orders/{id}', [MainController::class, 'showOrderDetails'])->name('orderDetails');
@@ -60,6 +60,8 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register_process', [AuthController::class, 'register'])->name('register_process');
 });
+
+Route::get('/payment/callback', [MainController::class, 'showFeedback'])->name('paymentCallback');
 
 Route::get('/feedback', [MainController::class, 'showFeedback'])->name('showFeedback');
 Route::post('/feedback', [MainController::class, 'saveFeedback'])->name('saveFeedback');
