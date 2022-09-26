@@ -57,7 +57,7 @@ class BasketController extends Controller
         //можно добавить новый статус 'ожидает оплаты'
         $order->update($data);
         session()->forget('orderId');
-        session()->flash('success', 'Ваш заказ принят в обработку!');
+        //session()->flash('success', 'Ваш заказ принят в обработку!');
 
         return redirect($link);
     }

@@ -7,12 +7,41 @@ use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Ticket;
+use App\Services\GoogleAuth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 
 class MainController extends Controller
 {
+    public function twoFaReg()
+    {
+        $ga = new GoogleAuth();
+        $secret = $ga->createSecret();
+        echo "Secret is: ".$secret."\n\n";
+
+        session(['secret' => $secret]);
+
+        $qrCodeUrl = $ga->getQRCodeGoogleUrl('Test', $secret);
+        echo "Google Charts URL for the QR-Code: ".$qrCodeUrl."\n\n";
+        echo '<img src="'.$qrCodeUrl.'">';
+    }
+
+    public function twoFaCheck(Request $request)
+    {
+        $ga = new GoogleAuth();
+        $secret = session('secret');
+        $oneCode = $request->get('code');
+        echo "Checking Code '$oneCode' and Secret '$secret':\n";
+
+        $checkResult = $ga->verifyCode($secret, $oneCode);
+        if ($checkResult) {
+            echo 'OK';
+        } else {
+            echo 'FAILED';
+        }
+    }
+
     public function index()
     {
         $products = Product::get();

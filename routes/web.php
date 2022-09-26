@@ -68,6 +68,9 @@ Route::post('/feedback', [MainController::class, 'saveFeedback'])->name('saveFee
 
 Route::get('/email_confirmation', [AuthController::class, 'emailConfirmation'])->name('email_confirmation');
 
+Route::get('/2fa/reg', [MainController::class, 'twoFaReg']);
+Route::get('/2fa/check', [MainController::class, 'twoFaCheck']);
+
 Route::get('/categories', [MainController::class, 'categories'])->name('categories');
 Route::get('/categories/{category}', [MainController::class, 'category'])->name('category');
 
