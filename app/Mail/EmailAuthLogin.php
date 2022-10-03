@@ -6,9 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Str;
 
-class EmailConfirmation extends Mailable
+class EmailAuthLogin extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,6 +30,6 @@ class EmailConfirmation extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.emailConfirmation', ['code' => $this->code]);
+        return $this->view('mail.emailAuthLogin', ['code' => $this->code]);
     }
 }

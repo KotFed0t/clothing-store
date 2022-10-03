@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Ticket;
+use App\Services\CaptchaService;
 use App\Services\GoogleAuth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -14,6 +15,15 @@ use Illuminate\Support\Facades\Mail;
 
 class MainController extends Controller
 {
+    public function captcha()
+    {
+        $captcha = new CaptchaService();
+        //dd($captcha->generateCaptcha());
+//        echo $captcha->generateCaptcha();
+        $captchaImg = $captcha->generateCaptcha();
+        return view('auth.login', ['captchaImg' => $captchaImg]);
+    }
+
     public function twoFaReg()
     {
         $ga = new GoogleAuth();

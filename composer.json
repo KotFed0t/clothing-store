@@ -11,7 +11,8 @@
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
-        "yoomoney/yookassa-sdk-php": "^2.6"
+        "yoomoney/yookassa-sdk-php": "^2.6",
+      "ext-gd": "*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.7",
