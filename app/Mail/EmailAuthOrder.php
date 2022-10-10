@@ -12,15 +12,17 @@ class EmailAuthOrder extends Mailable
     use Queueable, SerializesModels;
 
     protected $code;
+    protected $order;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($code)
+    public function __construct($code, $order)
     {
         $this->code = $code;
+        $this->order = $order;
     }
 
     /**
@@ -30,6 +32,7 @@ class EmailAuthOrder extends Mailable
      */
     public function build()
     {
-        return $this->view('mail.emailAuthOrder', ['code' => $this->code]);
+
+        return $this->view('mail.emailAuthOrder', ['code' => $this->code, 'order' => $this->order]);
     }
 }

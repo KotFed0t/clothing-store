@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Mail\EmailConfirmation;
 use App\Models\User;
+use App\Services\CaptchaService;
 use App\Services\GoogleAuth;
 use App\Services\MailAuthService;
+use App\Services\ThrottleLoginService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -15,12 +17,16 @@ class AuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view("auth.login");
+        $captcha = new CaptchaService();
+        $captchaImg = $captcha->generateCaptcha();
+        return view('auth.login', ['captchaImg' => $captchaImg]);
     }
 
     public function showRegisterForm()
     {
-        return view("auth.register");
+        $captcha = new CaptchaService();
+        $captchaImg = $captcha->generateCaptcha();
+        return view("auth.register", ['captchaImg' => $captchaImg]);
     }
 
     public function logout()
@@ -33,11 +39,26 @@ class AuthController extends Controller
     {
         $data = $request->validate([
             'email' => ['required', 'email', 'string'],
-            'password' => ['required']
+            'password' => ['required'],
+            'captcha' => ['required']
         ]);
 
-        if (auth()->attempt($data)) {
-            if (auth()->user()->email_status !== 'verified') { // елси не верифицирован - то генерим снова google secret и отсылаем снова код на почту
+        $ip = $request->ip();
+        $tls = new ThrottleLoginService($ip, $data['email']);
+
+        if ($tls->hasTooManyLoginAttempts()) {
+            $remains = $tls->getThrottleExpiration();
+            session()->flash('warning', "Вы превысили допустимое количество попыток входа. Повторить попытку можно через: $remains сек.");
+            return redirect()->route('login')->withInput()->withErrors(['email' => 'Неверные логин или пароль']);
+        }
+
+        if (session('captcha') !== $data['captcha']) {
+            $tls->updateCounter();
+            return redirect()->route('login')->withInput()->withErrors(['captcha' => 'Капча введена неверно']);
+        }
+
+        if (auth()->attempt(['email' => $data['email'], 'password' => $data['password']])) {
+            if (auth()->user()->email_status !== 'verified') { // если не верифицирован - то генерим снова google secret и отсылаем снова код на почту
                 $user = auth()->user();
                 $mailAuth = new MailAuthService();
                 $mailAuth->setCodeAndSendToUser($user, 'register');
@@ -53,6 +74,7 @@ class AuthController extends Controller
                 session(['qrCodeUrl' => $qrCodeUrl]);
 
                 auth()->logout();
+                $tls->resetCounter();
                 return redirect()->route('registerShow2Fa');
             }
 
@@ -64,14 +86,16 @@ class AuthController extends Controller
             session(['fromLogin' => true]);
 
             auth()->logout();
-
+            $tls->resetCounter();
             return redirect()->route('loginShow2Fa');
         }
 
-        return redirect()->route('login')->withErrors(['email' => 'Неверные логин или пароль']);
+        $tls->updateCounter();
+        return redirect()->route('login')->withInput()->withErrors(['email' => 'Неверные логин или пароль']);
+
     }
 
-    public function register(Request $request)
+    public function register_process(Request $request)
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'min:2', 'max:30'],
@@ -86,11 +110,13 @@ class AuthController extends Controller
                     ->mixedCase()
                     ->numbers()
                     ->symbols()
-            ]
+            ],
+            'captcha' => ['required']
         ]);
 
-//        $token = Str::random(16);
-//        $link = route('email_confirmation') . '?token=' . $token . '&email=' . $data['email'];
+        if (session('captcha') !== $data['captcha']) {
+            return redirect()->route('register')->withInput()->withErrors(['captcha' => 'Капча введена неверно']);
+        }
 
         $ga = new GoogleAuth();
         $secret = $ga->createSecret();
@@ -114,19 +140,5 @@ class AuthController extends Controller
         }
 
         return redirect()->route('registerShow2Fa');
-    }
-
-    public function emailConfirmation(Request $request)
-    {
-        $token = $request->get('token');
-        $email = $request->get('email');
-        $user = User::where('email_status','=', $token)->where('email', '=', $email)->first();
-        if ($user) {
-            $user->update(['email_status' => 'verified']);
-            session()->flash('success', 'Почта успешно подтверждена!');
-            return redirect()->route('index');
-        }
-        session()->flash('warning', 'Что-то пошло не так...');
-        return redirect()->route('index');
     }
 }

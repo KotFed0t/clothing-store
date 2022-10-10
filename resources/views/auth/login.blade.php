@@ -32,11 +32,15 @@
                                     <p class="text-red-500">{{$message}}</p>
                                     @enderror
 
-{{--                                    <img class="mb-2" src="data:image/png;base64,{{$captchaImg}}" style="width: 200px; border-radius: .25rem;">--}}
-{{--                                    <div class="form-outline mb-4">--}}
-{{--                                        <input name="captcha" type="text" id="form3Example3cg" class="form-control form-control-lg"/>--}}
-{{--                                        <label class="form-label" for="form3Example3cg">Введите текст капчи</label>--}}
-{{--                                    </div>--}}
+                                    <img class="mb-2" src="data:image/png;base64,{{$captchaImg}}" style="width: 200px; border-radius: .25rem;">
+                                    <div class="form-outline mb-4">
+                                        <input name="captcha" type="text" id="form3Example3cg" class="form-control form-control-lg"/>
+                                        <label class="form-label" for="form3Example3cg">Введите текст капчи</label>
+                                    </div>
+
+                                    @error('captcha')
+                                    <p class="text-red-500">{{$message}}</p>
+                                    @enderror
 
                                     <div class="d-flex justify-content-center">
                                         <button type="submit"

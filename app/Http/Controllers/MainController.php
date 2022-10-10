@@ -15,43 +15,6 @@ use Illuminate\Support\Facades\Mail;
 
 class MainController extends Controller
 {
-    public function captcha()
-    {
-        $captcha = new CaptchaService();
-        //dd($captcha->generateCaptcha());
-//        echo $captcha->generateCaptcha();
-        $captchaImg = $captcha->generateCaptcha();
-        return view('auth.login', ['captchaImg' => $captchaImg]);
-    }
-
-    public function twoFaReg()
-    {
-        $ga = new GoogleAuth();
-        $secret = $ga->createSecret();
-        echo "Secret is: ".$secret."\n\n";
-
-        session(['secret' => $secret]);
-
-        $qrCodeUrl = $ga->getQRCodeGoogleUrl('Test', $secret);
-        echo "Google Charts URL for the QR-Code: ".$qrCodeUrl."\n\n";
-        echo '<img src="'.$qrCodeUrl.'">';
-    }
-
-    public function twoFaCheck(Request $request)
-    {
-        $ga = new GoogleAuth();
-        $secret = session('secret');
-        $oneCode = $request->get('code');
-        echo "Checking Code '$oneCode' and Secret '$secret':\n";
-
-        $checkResult = $ga->verifyCode($secret, $oneCode);
-        if ($checkResult) {
-            echo 'OK';
-        } else {
-            echo 'FAILED';
-        }
-    }
-
     public function index()
     {
         $products = Product::get();
@@ -91,7 +54,9 @@ class MainController extends Controller
 
     public function showFeedback()
     {
-        return view('feedback.form');
+        $captcha = new CaptchaService();
+        $captchaImg = $captcha->generateCaptcha();
+        return view('feedback.form', ['captchaImg' => $captchaImg]);
     }
 
     public function saveFeedback(Request $request)
@@ -100,8 +65,13 @@ class MainController extends Controller
             'name' => ['required', 'string', 'min:2', 'max:50'],
             'email' => ['required', 'email', 'string'],
             'phone' => ['required', 'regex:/(\+7|8)[\s(]*\d{3}[)\s]*\d{3}[\s-]?\d{2}[\s-]?\d{2}/'],
-            'text' => ['required', 'string', 'min:2', 'max:800']
+            'text' => ['required', 'string', 'min:2', 'max:800'],
+            'captcha' => ['required']
         ]);
+
+        if (session('captcha') !== $data['captcha']) {
+            return redirect()->route('showFeedback')->withInput()->withErrors(['captcha' => 'Капча введена неверно']);
+        }
 
         $data['status'] = 'new';
 
@@ -111,6 +81,8 @@ class MainController extends Controller
             Mail::to($data['email'])->send(new FeedbackNotification($ticket->id, $data['name']));
             session()->flash('success', 'Ваш отзыв успешно отправлен');
         }
+
+        session()->forget(['captcha']);
 
         return redirect()->route('index');
     }

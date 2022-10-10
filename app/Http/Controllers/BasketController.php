@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Services\MailAuthService;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
 
@@ -50,16 +51,14 @@ class BasketController extends Controller
         }
 
         $order = Order::find($orderId);
-
-        $payment = new PaymentService();
-        $link = $payment->createPayment($order, $user->id);
-
-        //можно добавить новый статус 'ожидает оплаты'
         $order->update($data);
-        session()->forget('orderId');
-        //session()->flash('success', 'Ваш заказ принят в обработку!');
 
-        return redirect($link);
+        $mailAuth = new MailAuthService();
+        $mailAuth->setCodeAndSendToUser($user, 'order', $order);
+
+        session(['fromOrder' => true]);
+
+        return redirect()->route('orderShow2Fa');
     }
 
     public function paymentCallback(Request $request)

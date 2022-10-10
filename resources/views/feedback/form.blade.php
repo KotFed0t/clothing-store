@@ -32,6 +32,18 @@
                 <label for="phone" class="form-label">Телефон</label>
                 <input type="tel" class="form-control" id="phone" name="phone" value="{{old('phone')}}">
             </div>
+
+            <div class="w-100"></div>
+            @error('captcha')
+            <p class="text-red-500">{{$message}}</p>
+            @enderror
+            <img class="mb-3" src="data:image/png;base64,{{$captchaImg}}" style="width: 200px; border-radius: .25rem;">
+            <div class="w-100"></div>
+            <div class="form-outline col-3 mb-3">
+                <input name="captcha" type="text" id="form3Example3cg" class="form-control form-control-lg"/>
+                <label class="form-label" for="form3Example3cg">Введите текст капчи</label>
+            </div>
+
             <div class="w-100"></div>
             @error('text')
             <p class="text-red-500">{{$message}}</p>

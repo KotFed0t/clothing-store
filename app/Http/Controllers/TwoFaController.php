@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Mail\EmailConfirmation;
+use App\Models\Order;
 use App\Models\User;
 use App\Services\GoogleAuth;
 use App\Services\MailAuthService;
+use App\Services\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -29,8 +31,8 @@ class TwoFaController extends Controller
         $ga = new GoogleAuth();
 
         $data = $request->validate([
-            'email_code' => ['numeric'],
-            'googleAuthCode' => ['numeric']
+            'email_code' => ['required'],
+            'googleAuthCode' => ['required']
         ]);
 
         $userId = session('userId');
@@ -52,7 +54,7 @@ class TwoFaController extends Controller
         $user->email_status = 'verified';
         $user->save();
 
-        session()->forget(['userId', 'secret', 'qrCodeUrl']);
+        session()->forget(['userId', 'secret', 'qrCodeUrl', 'captcha']);
 
         return redirect()->route('login');
     }
@@ -63,7 +65,7 @@ class TwoFaController extends Controller
             return redirect()->route('login');
         }
 
-        return view('twoFa.login2Fa');
+        return view('twoFa.2Fa', ['fromLogin' => true]);
     }
 
     public function loginCheck2Fa(Request $request)
@@ -75,8 +77,8 @@ class TwoFaController extends Controller
         $ga = new GoogleAuth();
 
         $data = $request->validate([
-            'email_code' => ['numeric'],
-            'googleAuthCode' => ['numeric']
+            'email_code' => ['required'],
+            'googleAuthCode' => ['required']
         ]);
 
         $userId = session('userId');
@@ -95,10 +97,56 @@ class TwoFaController extends Controller
             return redirect()->route('loginShow2Fa')->withErrors(['googleAuthCode' => 'введен неверный код']);
         }
 
-        session()->forget(['userId', 'fromLogin']);
+        session()->forget(['userId', 'fromLogin', 'captcha']);
         Auth::loginUsingId($user->id);
 
         return redirect()->route('index');
+    }
+
+    public function orderShow2Fa()
+    {
+        if(session('fromOrder') === null) {
+            return redirect()->route('index');
+        }
+
+        return view('twoFa.2Fa', ['fromOrder' => true]);
+    }
+
+    public function orderCheck2Fa(Request $request)
+    {
+        if(session('fromOrder') === null) {
+            return redirect()->route('index');
+        }
+
+        $user = Auth::user();
+
+        $ga = new GoogleAuth();
+
+        $data = $request->validate([
+            'email_code' => ['required'],
+            'googleAuthCode' => ['required']
+        ]);
+
+        if (time() > $user->email_code_expiration) {
+            return redirect()->route('orderShow2Fa')->withErrors(['email_code' => 'время жизни кода истекло']);
+        }
+
+        if ($data['email_code'] != $user->email_code) {
+            return redirect()->route('orderShow2Fa')->withErrors(['email_code' => 'введен неверный код']);
+        }
+
+        if (!$ga->verifyCode($user->google_auth_secret, $data['googleAuthCode'])) {
+            return redirect()->route('orderShow2Fa')->withErrors(['googleAuthCode' => 'введен неверный код']);
+        }
+
+        $order = Order::find(session('orderId'));
+
+        $payment = new PaymentService();
+        $link = $payment->createPayment($order, $user->id);
+
+        session()->forget(['orderId', 'fromOrder']);
+
+        return redirect($link);
     }
 
 

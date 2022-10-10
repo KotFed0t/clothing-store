@@ -10,9 +10,13 @@
                             <div class="card-body p-5">
                                 <h2 class="text-uppercase text-center mb-5">Двухфакторная аутентификация</h2>
 
-                                <form action="{{route('loginCheck2Fa')}}" method="POST">
-                                    @csrf
+                                @isset($fromLogin)
+                                    <form action="{{route('loginCheck2Fa')}}" method="POST">
+                                @else
+                                    <form action="{{route('orderCheck2Fa')}}" method="POST">
+                                @endisset
 
+                                    @csrf
                                     <div class="form-outline mb-4">
                                         <input name="email_code" value="{{old('email_code')}}" id="form3Example3cg" class="form-control form-control-lg"/>
                                         <label class="form-label" for="form3Example3cg">Введите код, отправленный вам на почту</label>

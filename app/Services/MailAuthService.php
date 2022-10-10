@@ -19,7 +19,7 @@ class MailAuthService
         return $code;
     }
 
-    public function setCodeAndSendToUser(User $user, $action)
+    public function setCodeAndSendToUser(User $user, $action, $order = null)
     {
         $code = $this->generateCode();
 
@@ -35,7 +35,7 @@ class MailAuthService
                 Mail::to($user->email)->send(new EmailAuthLogin($code));
                 break;
             case 'order':
-                Mail::to($user->email)->send(new EmailAuthOrder($code));
+                Mail::to($user->email)->send(new EmailAuthOrder($code, $order));
                 break;
         }
     }

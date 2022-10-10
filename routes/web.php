@@ -53,13 +53,16 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/orders', [MainController::class, 'showOrders'])->name('orders');
     Route::get('/orders/{id}', [MainController::class, 'showOrderDetails'])->name('orderDetails');
+
+    Route::get('order/2fa/show', [TwoFaController::class, 'orderShow2Fa'])->name('orderShow2Fa');
+    Route::post('order/2fa/check', [TwoFaController::class, 'orderCheck2Fa'])->name('orderCheck2Fa');
 });
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login_process', [AuthController::class, 'login_process'])->name('login_process');
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('/register_process', [AuthController::class, 'register'])->name('register_process');
+    Route::post('/register_process', [AuthController::class, 'register_process'])->name('register_process');
 
     Route::get('/register/2fa/show', [TwoFaController::class, 'registerShow2Fa'])->name('registerShow2Fa');
     Route::post('/register/2fa/check', [TwoFaController::class, 'registerCheck2Fa'])->name('registerCheck2Fa');
@@ -73,8 +76,6 @@ Route::post('/payment/callback', [BasketController::class, 'paymentCallback'])->
 
 Route::get('/feedback', [MainController::class, 'showFeedback'])->name('showFeedback');
 Route::post('/feedback', [MainController::class, 'saveFeedback'])->name('saveFeedback');
-
-Route::get('/email_confirmation', [AuthController::class, 'emailConfirmation'])->name('email_confirmation');
 
 Route::get('/categories', [MainController::class, 'categories'])->name('categories');
 Route::get('/categories/{category}', [MainController::class, 'category'])->name('category');
