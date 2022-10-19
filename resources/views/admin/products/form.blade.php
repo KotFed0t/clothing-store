@@ -56,6 +56,56 @@
                 </div>
                 <br>
                 <div class="input-group row">
+                    <label for="category_id" class="col-sm-2 col-form-label">Гендер: </label>
+                    <div class="col-sm-6">
+                        <select name="gender" id="category_id" class="form-control">
+                            <option value="man" @isset($product) @if($product->gender == 'man') selected @endif @endisset>man</option>
+                            <option value="woman" @isset($product) @if($product->gender == 'woman') selected @endif @endisset>woman</option>
+                        </select>
+                    </div>
+                </div>
+                <br>
+                @foreach($properties as $property)
+                    @if($property->name != 'размер')
+                        <div class="input-group row">
+                            <label for="category_id" class="col-sm-2 col-form-label">{{$property->name}}: </label>
+                            <div class="col-sm-6">
+                                <select name="values_id[]" id="category_id" class="form-control">
+                                    @foreach($property->values as $value)
+                                        <option value="{{ $value->id }}"
+                                                @isset($product)
+                                                    @if($product->values->contains('id', $value->id))
+                                                        selected
+                                            @endif
+                                            @endisset
+                                        >{{ $value->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                    @else
+                        <div class="input-group row">
+                            <label for="category_id" class="col-sm-2 col-form-label">{{$property->name}}: </label>
+                            <div class="col-sm-6">
+                                <select multiple size="6" name="values_id[]" id="category_id" >
+                                    <option disabled>Выберите значение</option>
+                                    @foreach($property->values as $value)
+                                        <option value="{{ $value->id }}"
+                                                @isset($product)
+                                                    @if($product->values->contains('id', $value->id))
+                                                        selected
+                                            @endif
+                                            @endisset
+                                        >{{ $value->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                    @endif
+                @endforeach
+                <div class="input-group row">
                     <label for="description" class="col-sm-2 col-form-label">Описание: </label>
                     <div class="col-sm-6">
                         <textarea name="description" id="description" cols="72"

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TwoFaController;
@@ -40,6 +41,20 @@ Route::group([
     Route::get('/tickets', [AdminController::class, 'tickets'])->name('admin.tickets');
     Route::get('/tickets/{id}', [AdminController::class, 'ticketDetails'])->name('admin.ticketDetails');
     Route::post('/tickets/response', [AdminController::class, 'ticketResponse'])->name('admin.ticketResponse');
+
+    Route::get('/properties', [PropertyController::class, 'showProperties'])->name('admin.properties');
+    Route::get('/properties/{id}/edit', [PropertyController::class, 'showEditProperty'])->name('admin.showEditProperty');
+    Route::post('/properties/{id}/edit', [PropertyController::class, 'editProperty'])->name('admin.editProperty');
+    Route::get('/properties/create', [PropertyController::class, 'showCreateProperty'])->name('admin.showCreateProperty');
+    Route::post('/properties/create', [PropertyController::class, 'createProperty'])->name('admin.createProperty');
+    Route::get('/properties/{id}/delete', [PropertyController::class, 'deleteProperty'])->name('admin.deleteProperty');
+
+    Route::get('/properties/{propertyId}/values', [PropertyController::class, 'showPropertyValues'])->name('admin.propertyValues');
+    Route::get('/values/{valueId}/edit', [PropertyController::class, 'showEditPropertyValue'])->name('admin.showEditPropertyValue');
+    Route::post('/values/{valueId}/edit', [PropertyController::class, 'editPropertyValue'])->name('admin.editPropertyValue');
+    Route::get('/properties/{propertyId}/values/create', [PropertyController::class, 'showCreatePropertyValue'])->name('admin.showCreatePropertyValue');
+    Route::post('/properties/{propertyId}/values/create', [PropertyController::class, 'createPropertyValue'])->name('admin.createPropertyValue');
+    Route::get('/values/{valueId}/delete', [PropertyController::class, 'deletePropertyValue'])->name('admin.deletePropertyValue');
 });
 
 Route::get('/basket', [BasketController::class, 'basket'])->name('basket');
@@ -72,13 +87,16 @@ Route::middleware('guest')->group(function () {
 
 });
 
+Route::get('/search', [MainController::class, 'search'])->name('search');
+
 Route::post('/payment/callback', [BasketController::class, 'paymentCallback'])->name('paymentCallback');
 
 Route::get('/feedback', [MainController::class, 'showFeedback'])->name('showFeedback');
 Route::post('/feedback', [MainController::class, 'saveFeedback'])->name('saveFeedback');
 
-Route::get('/categories', [MainController::class, 'categories'])->name('categories');
-Route::get('/categories/{category}', [MainController::class, 'category'])->name('category');
+//Route::get('/categories', [MainController::class, 'categories'])->name('categories');
+Route::get('/categories/{gender}', [MainController::class, 'categoryGender'])->name('categoryGender');
+Route::get('/categories/{gender}/{category}', [MainController::class, 'category'])->name('category');
 
 Route::get('/categories/{category}/{product?}', [MainController::class, 'product'])->name('product');
 

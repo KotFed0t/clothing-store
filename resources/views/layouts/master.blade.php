@@ -15,9 +15,27 @@
     <ul class="nav nav-pills">
         <li class="nav-item"><a href="{{route('index')}}" class="nav-link active" aria-current="page">Магазин одежды</a>
         </li>
-        <li class="nav-item"><a href="{{route('index')}}" class="nav-link">Все товары</a></li>
-        <li class="nav-item"><a href="{{route('categories')}}" class="nav-link">Категории</a></li>
-        <li class="nav-item"><a href="{{route('basket')}}" class="nav-link">В корзину</a></li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="{{route('categoryGender', 'man')}}" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Мужчинам</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="{{route('category', ['man', 'jacket'])}}">Куртки</a>
+                <a class="dropdown-item" href="{{route('category', ['man', 'coat'])}}">Пальто</a>
+                <a class="dropdown-item" href="{{route('category', ['man', 't-shirts'])}}">Футболки</a>
+                <a class="dropdown-item" href="{{route('category', ['man', 'pants'])}}">Брюки</a>
+                <a class="dropdown-item" href="{{route('category', ['man', 'sweaters'])}}">Свитеры</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="{{route('categoryGender', 'woman')}}" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Женщинам</a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                <a class="dropdown-item" href="{{route('category', ['woman', 'jacket'])}}">Куртки</a>
+                <a class="dropdown-item" href="{{route('category', ['woman', 'coat'])}}">Пальто</a>
+                <a class="dropdown-item" href="{{route('category', ['woman', 't-shirts'])}}">Футболки</a>
+                <a class="dropdown-item" href="{{route('category', ['woman', 'pants'])}}">Брюки</a>
+                <a class="dropdown-item" href="{{route('category', ['woman', 'sweaters'])}}">Свитеры</a>
+            </div>
+        </li>
+        <li class="nav-item"><a href="{{route('basket')}}" class="nav-link">Корзина</a></li>
         <li class="nav-item"><a href="{{route('showFeedback')}}" class="nav-link">Обратная связь</a></li>
 
         @auth()

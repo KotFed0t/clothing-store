@@ -19,7 +19,8 @@ class Product extends Model
         'description',
         'image',
         'price',
-        'category_id'
+        'category_id',
+        'gender'
     ];
 
     public function category()
@@ -33,5 +34,10 @@ class Product extends Model
             return $this->pivot->count * $this->price;
         }
         return $this->price;
+    }
+
+    public function values()
+    {
+        return $this->belongsToMany(Value::class);
     }
 }

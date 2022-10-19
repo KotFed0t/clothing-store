@@ -6,8 +6,10 @@ use App\Mail\FeedbackNotification;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Property;
 use App\Models\Ticket;
 use App\Services\CaptchaService;
+use App\Services\FilterProductsService;
 use App\Services\GoogleAuth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -18,7 +20,8 @@ class MainController extends Controller
     public function index()
     {
         $products = Product::get();
-        return view('index', compact('products'));
+        $categories = Category::get();
+        return view('index', compact('products', 'categories'));
     }
 
     public function categories()
@@ -27,10 +30,20 @@ class MainController extends Controller
         return view('categories', compact('categories'));
     }
 
-    public function category($code)
+    public function categoryGender(Request $request, $gender)
+    {
+       $products = FilterProductsService::filter($request, $gender);
+
+        $properties = Property::get();
+        return view('category', compact('products', 'gender', 'properties'));
+    }
+
+    public function category(Request $request, $gender, $code)
     {
         $category = Category::where('code', $code)->first();
-        return view('category', ['category' => $category]);
+        $products = FilterProductsService::filter($request, $gender, $category->id);
+        $properties = Property::get();
+        return view('category', ['category' => $category, 'products' => $products, 'properties' => $properties]);
     }
 
     public function product($category, $product = null)
@@ -85,6 +98,16 @@ class MainController extends Controller
         session()->forget(['captcha']);
 
         return redirect()->route('index');
+    }
+
+    public function search(Request $request)
+    {
+        $data = $request->validate(['search' => ['required', 'string', 'max:50']]);
+        $search = $data['search'];
+        $products = Product::where('name', 'ilike', '%' . $search . '%')
+            ->orWhere('description', 'ilike', '%' . $search . '%')
+            ->get();
+        return view('index', compact(['products', 'search']));
     }
 
 }

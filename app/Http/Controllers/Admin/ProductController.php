@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Property;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -26,14 +28,21 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($productId);
         $categories = Category::get();
-        return view('admin.products.form', compact('product', 'categories'));
+        $properties = Property::get();
+        return view('admin.products.form', compact('product', 'categories', 'properties'));
     }
 
     public function editProduct(Request $request, $productId)
     {
         $product = Product::findOrFail($productId);
-
         $params = $request->all();
+        $values = $request->get('values_id');
+        //удаление и вставка свойств
+        foreach ($values as $value){
+                $data[] = ['product_id' => $productId, 'value_id' => $value];
+        }
+        DB::table('product_value')->where('product_id', $productId)->delete();
+        DB::table('product_value')->insert($data);
 
         if ($request->hasFile('image')) {
             if ($product->image) {
@@ -51,19 +60,28 @@ class ProductController extends Controller
     public function showCreateProduct()
     {
         $categories = Category::get();
-        return view('admin.products.form', compact('categories'));
+        $properties = Property::get();
+        return view('admin.products.form', compact('categories', 'properties'));
     }
 
     public function createProduct(Request $request)
     {
         $params = $request->all();
+        $values = $request->get('values_id');
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('products');
             $params['image'] = $path;
         }
 
-        Product::create($params);
+        $productId = Product::create($params)->id;
+        //удаление и вставка свойств
+        foreach ($values as $value){
+            $data[] = ['product_id' => $productId, 'value_id' => $value];
+        }
+        DB::table('product_value')->where('product_id', $productId)->delete();
+        DB::table('product_value')->insert($data);
+
         return redirect()->route('admin.products');
     }
 

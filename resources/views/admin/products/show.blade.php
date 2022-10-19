@@ -40,6 +40,29 @@
                 <td>{{ $product->category->name }}</td>
             </tr>
             <tr>
+                <td>Гендер</td>
+                <td>{{ $product->gender }}</td>
+            </tr>
+            @foreach($product->values as $value)
+                @if($value->property->name != 'размер')
+                    <tr>
+                        <td>{{$value->property->name}}</td>
+                        <td>{{ $value->name }}</td>
+                    </tr>
+                @endif
+            @endforeach
+
+            <tr>
+                <td>Размер</td>
+                <td>
+            @foreach($product->values as $value)
+                @if($value->property->name == 'размер')
+                    {{ $value->name }}<br>
+                @endif
+            @endforeach
+                </td>
+            </tr>
+            <tr>
                 <td>Цена</td>
                 <td>{{ $product->price }} р.</td>
             </tr>

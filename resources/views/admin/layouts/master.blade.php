@@ -19,6 +19,7 @@
         <li class="nav-item"><a href="{{route('index')}}" class="nav-link">На главную магазина</a></li>
         <li class="nav-item"><a href="{{route('admin.categories')}}" class="nav-link">Категории</a></li>
         <li class="nav-item"><a href="{{route('admin.products')}}" class="nav-link">Товары</a></li>
+        <li class="nav-item"><a href="{{route('admin.properties')}}" class="nav-link">Свойства</a></li>
         <li class="nav-item"><a href="{{route('admin.orders')}}" class="nav-link">Заказы</a></li>
         <li class="nav-item"><a href="{{route('admin.tickets')}}" class="nav-link">Обращения</a></li>
         <li class="nav-item"><a href="{{route('logout')}}" class="nav-link">Выход</a></li>

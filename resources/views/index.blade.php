@@ -1,6 +1,11 @@
 @extends('layouts.master')
 
 @section('content')
+    <form method="GET" action="{{route('search')}}">
+        <input type="search" name="search" placeholder="Поиск" value="@isset($search){{$search}}@endisset">
+        <button type="submit">Найти</button>
+    </form>
+
     <div class="album py-5">
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
