@@ -1,22 +1,14 @@
 <div class="col">
-    <div class="card shadow-sm">
+    <div class="card shadow-lg border-0 rounded-4">
+        <a class="text-decoration-none text-reset" href="{{route('product', [$product->category->code, $product->code])}}">
         <img src="{{ Storage::url($product->image) }}" width="100%" height="225px">
 
         <div class="card-body">
             <h5 class="card-text">{{$product->name}}</h5>
-            <p>категория: {{$product->category->name}}</p>
-            <p>цена: {{$product->price}} руб.</p>
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                    <form action="{{route('basket-add', $product)}}" method="POST">
-                        <button type="submit" class="btn btn-sm btn-outline-secondary">В корзину
-                        </button>
-                        <a type="button" href="{{route('product', [$product->category->code, $product->code])}}" class="btn btn-sm btn-outline-secondary">Подронее</a>
-                        @csrf
-                    </form>
-                </div>
-            </div>
+            <p class="m-1">категория: {{$product->category->name}}</p>
+            <p class="m-1">цена: {{$product->price}} руб.</p>
         </div>
+        </a>
     </div>
 </div>
 

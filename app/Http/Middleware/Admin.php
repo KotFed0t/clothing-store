@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class CheckIsAdmin
+class Admin
 {
     /**
      * Handle an incoming request.
@@ -23,8 +23,7 @@ class CheckIsAdmin
                 return $next($request);
             };
         }
-        session()->flash('warning', 'у вас нет прав администратора');
+        session()->flash('warning', 'у вас недостаточно прав');
         return redirect()->route('index');
-
     }
 }

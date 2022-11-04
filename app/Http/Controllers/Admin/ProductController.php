@@ -38,8 +38,8 @@ class ProductController extends Controller
         $params = $request->all();
         $values = $request->get('values_id');
         //удаление и вставка свойств
-        foreach ($values as $value){
-                $data[] = ['product_id' => $productId, 'value_id' => $value];
+        foreach ($values as $value) {
+            $data[] = ['product_id' => $productId, 'value_id' => $value];
         }
         DB::table('product_value')->where('product_id', $productId)->delete();
         DB::table('product_value')->insert($data);
@@ -51,6 +51,17 @@ class ProductController extends Controller
 
             $path = $request->file('image')->store('products');
             $params['image'] = $path;
+        }
+
+        if ($request->hasFile('images')) {
+
+            Storage::delete($product->images());
+            DB::table('image_product')->where('product_id', $product->id)->delete();
+
+            foreach ($request->file('images') as $img) {
+                $path = $img->store('products');
+                DB::table('image_product')->insert(['product_id' => $product->id, 'image' => $path]);
+            }
         }
 
         $product->update($params);
@@ -75,8 +86,17 @@ class ProductController extends Controller
         }
 
         $productId = Product::create($params)->id;
+
+        //сохранение дополнительных фото
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $img) {
+                $path = $img->store('products');
+                DB::table('image_product')->insert(['product_id' => $productId, 'image' => $path]);
+            }
+        }
+
         //удаление и вставка свойств
-        foreach ($values as $value){
+        foreach ($values as $value) {
             $data[] = ['product_id' => $productId, 'value_id' => $value];
         }
         DB::table('product_value')->where('product_id', $productId)->delete();
@@ -91,6 +111,11 @@ class ProductController extends Controller
         if ($product->image) {
             Storage::delete($product->image);
         }
+
+        Storage::delete($product->images());
+        DB::table('image_product')->where('product_id', $product->id)->delete();
+
+        DB::table('product_value')->where('product_id', $productId)->delete();
 
         Product::destroy($productId);
         return redirect()->route('admin.products');

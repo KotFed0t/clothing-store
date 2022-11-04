@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\DB;
+use League\Flysystem\Config;
 
 /**
  * @mixin Builder
@@ -39,5 +41,15 @@ class Product extends Model
     public function values()
     {
         return $this->belongsToMany(Value::class);
+    }
+
+    public function images()
+    {
+        $rows = DB::table('image_product')->where('product_id', $this->id)->select('image')->get();
+        $images = [];
+        foreach ($rows as $row) {
+            $images[] = $row->image;
+        }
+        return $images;
     }
 }

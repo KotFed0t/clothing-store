@@ -13,19 +13,30 @@
             <th scope="col">Адрес доставки</th>
             <th scope="col">Сумма</th>
             <th scope="col">Статус</th>
+            <th scope="col">Действие</th>
         </tr>
         </thead>
         <tbody>
         @isset($order)
             <tr>
-
                 <td>{{$order->id}}</td>
                 <td>{{$order->user->name}}</td>
                 <td>{{$order->user->phone}}</td>
                 <td>{{$order->updated_at}}</td>
                 <td>{{"$order->country, $order->city, $order->address. Индекс: $order->postal_code"}}</td>
                 <td>{{$order->getFullPrice()}}</td>
-                <td>{{$order->getStatusName()}}</td>
+                <form action="{{route('admin.orderDetails', $order->id)}}">
+                    <td>
+                        <select name="status_id" class="form-select mb-4" aria-label="Default select example">
+                            <option value="1" @if($order->status == 1) selected @endif>Оформлен</option>
+                            <option value="2" @if($order->status == 2) selected @endif>комплектуется</option>
+                            <option value="3" @if($order->status == 3) selected @endif>передан в доставку</option>
+                            <option value="4" @if($order->status == 4) selected @endif>доставлен</option>
+                            <option value="5" @if($order->status == 5) selected @endif>возврат</option>
+                        </select>
+                    </td>
+                    <td><button class="btn btn-success">Применить</button></td>
+                </form>
             </tr>
         @endisset
         </tbody>
@@ -46,7 +57,7 @@
         @isset($products)
             @foreach($products as $product)
                 <tr>
-                    <td>{{$product->name}}</td>
+                    <td><a href="{{route('product', [$product->category->code, $product->code])}}">{{$product->name}}</a></td>
                     <td>{{$product->category->name}}</td>
                     <td>{{$product->pivot->count}}</td>
                     <td>{{$product->price}}</td>

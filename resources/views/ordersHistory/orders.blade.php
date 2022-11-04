@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-    <h1 class="text-center mt-5">Заказы</h1>
+    <h1 class="text-center mb-4">Заказы</h1>
 
     <table class="table table-striped">
         <thead>
@@ -26,7 +26,7 @@
                     <td>{{$order->updated_at}}</td>
                     <td>{{$order->getFullPrice()}}</td>
                     <td>{{$order->getStatusName()}}</td>
-                    <td><a href="{{route('orderDetails', $order->id)}}">Открыть</a></td>
+                    <td><a class="btn bg-dark text-white" href="{{route('orderDetails', $order->id)}}">Открыть</a></td>
                 </tr>
             @endforeach
         @endisset

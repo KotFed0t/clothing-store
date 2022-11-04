@@ -29,13 +29,15 @@
                     <td>
                         <div class="btn-group" role="group">
                             <form>
+                                @csrf
                                 <a class="btn btn-success" type="button"
                                    href="{{route('admin.showCategory', $category->id)}}">Открыть</a>
-                                <a class="btn btn-warning" type="button"
-                                   href="{{route('admin.showEditCategory', $category->id)}}">Редактировать</a>
-                                @csrf
-                                <a class="btn btn-danger" type="button"
-                                   href="{{route('admin.deleteCategory', $category->id)}}">удалить</a>
+                                @can('admin-manager')
+                                    <a class="btn btn-warning" type="button"
+                                       href="{{route('admin.showEditCategory', $category->id)}}">Редактировать</a>
+                                    <a class="btn btn-danger" type="button"
+                                       href="{{route('admin.deleteCategory', $category->id)}}">удалить</a>
+                                @endcan
                             </form>
                         </div>
                     </td>
@@ -43,8 +45,10 @@
             @endforeach
             </tbody>
         </table>
+        @can('admin-manager')
+            <a class="btn btn-success" type="button"
+               href="{{route('admin.showCreateCategory')}}">Добавить категорию</a>
+        @endcan
 
-        <a class="btn btn-success" type="button"
-           href="{{route('admin.showCreateCategory')}}">Добавить категорию</a>
     </div>
 @endsection

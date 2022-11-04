@@ -12,7 +12,13 @@
 
                                 @isset($fromLogin)
                                     <form action="{{route('loginCheck2Fa')}}" method="POST">
-                                @else
+                                @endisset
+
+                                @isset($fromResetPassword)
+                                    <form action="{{route('resetPasswordCheck2Fa')}}" method="POST">
+                                @endisset
+
+                                @isset($fromOrder)
                                     <form action="{{route('orderCheck2Fa')}}" method="POST">
                                 @endisset
 

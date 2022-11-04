@@ -2,11 +2,14 @@
 
 namespace App\Services;
 
+use App\Mail\EmailOrderStatus;
 use App\Models\Order;
 use App\Models\Transaction;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use YooKassa\Client;
 use YooKassa\Model\NotificationEventType;
 use YooKassa\Model\Notification\NotificationSucceeded;
@@ -111,6 +114,10 @@ class PaymentService
                     $order = Order::find($order_id);
                     $order->status = 1;
                     $order->save();
+
+                    //отправляем сообщение, что оплата прошла
+                    $userEmail = User::find($order->user_id)->email;
+                    Mail::to($userEmail)->send(new EmailOrderStatus($order));
                 }
             } elseif ($payment->status === 'canceled') {
                 $metadata = $payment->metadata;
@@ -121,11 +128,11 @@ class PaymentService
                     $transaction->status = 'CANCELED';
                     $transaction->save();
 
-                    //добавить статус отмены и подставить сюда потом
-//                    $order_id = (int)$metadata->order_id;
-//                    $order = Order::find($order_id);
-//                    $order->status = 1;
-//                    $order->save();
+                    //отправляем сообщение, что оплата не прошла
+                    $order_id = (int)$metadata->order_id;
+                    $order = Order::find($order_id);
+                    $userEmail = User::find($order->user_id)->email;
+                    Mail::to($userEmail)->send(new EmailOrderStatus($order));
                 }
             }
 

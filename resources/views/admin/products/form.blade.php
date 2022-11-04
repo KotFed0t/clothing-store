@@ -122,10 +122,18 @@
                 </div>
                 <br>
                 <div class="input-group row">
-                    <label for="image" class="col-sm-2 col-form-label">Картинка: </label>
+                    <label for="image" class="col-sm-2 col-form-label">Основное изображение: </label>
                     <div class="col-sm-2">
                         <label class="btn btn-default btn-file">
                             Загрузить <input type="file" style="display: none;" name="image" id="image">
+                        </label>
+                    </div>
+                </div>
+                <div class="input-group row">
+                    <label for="image" class="col-sm-2 col-form-label">Доп. изображения: </label>
+                    <div class="col-sm-2">
+                        <label class="btn btn-default btn-file">
+                            Загрузить <input type="file" style="display: none;" name="images[]" id="image" multiple>
                         </label>
                     </div>
                 </div>

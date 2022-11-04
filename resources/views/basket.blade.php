@@ -7,6 +7,8 @@
         <thead>
         <tr>
             <th scope="col">Название</th>
+            <th scope="col">Бренд</th>
+            <th scope="col">Размер</th>
             <th scope="col">Количество</th>
             <th scope="col">Цена</th>
             <th scope="col">Стоимость</th>
@@ -16,13 +18,19 @@
         @isset($order)
             @foreach($order->products as $product)
                 <tr>
-                    <th scope="row">
-                        <a href="{{route('product', [$product->category->code, $product->code])}}">{{$product->name}}</a>
-                    </th>
-                    <td>
+                    <td valign="middle" scope="row">
+                        <img src="{{Storage::url($product->image)}}" width="80px" height="80px">
+                        <a class="text-decoration-none" href="{{route('product', [$product->category->code, $product->code])}}">{{$product->name}}</a>
+                    </td>
+                   <td valign="middle">{{$product->values->where('property_id', $propertyIdBrand)->first()->name}}</td>
+
+                    <td valign="middle" scope="row">
+                        <p>{{\App\Models\Value::getSizeName($product->pivot->size_id)}}</p>
+                    </td>
+                    <td valign="middle">
                         <span class="badge bg-dark">{{$product->pivot->count}}</span>
                         <div class="btn-group">
-                            <form action="{{route('basket-add', $product)}}" method="POST">
+                            <form action="{{route('basket-add', [$product, $product->pivot->size_id])}}" method="POST">
                                 <button type="submit" class="btn btn-outline-secondary">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                          class="bi bi-plus-square" viewBox="0 0 16 16">
@@ -35,7 +43,7 @@
                                 </button>
                                 @csrf
                             </form>
-                            <form action="{{route('basket-remove', $product)}}" method="POST">
+                            <form action="{{route('basket-remove', [$product, $product->pivot->size_id])}}" method="POST">
                                 <button type="submit" class="btn btn-outline-secondary">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                          class="bi bi-dash-square" viewBox="0 0 16 16">
@@ -50,8 +58,8 @@
 
                         </div>
                     </td>
-                    <td>{{$product->price}} руб.</td>
-                    <td>{{$product->getPriceForCount()}} руб.</td>
+                    <td valign="middle">{{$product->price}} руб.</td>
+                    <td valign="middle">{{$product->getPriceForCount()}} руб.</td>
                 </tr>
             @endforeach
             <tr>
@@ -64,6 +72,6 @@
     </table>
     <br>
     <div class="btn-group float-end">
-        <a href="{{route('basket-place')}}" type="button" class="btn btn-success">Оформить заказ</a>
+        <a href="{{route('basket-place')}}" type="button" class="btn btn-dark">Оформить заказ</a>
     </div>
 @endsection

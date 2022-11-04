@@ -19,7 +19,7 @@ class MainController extends Controller
 {
     public function index()
     {
-        $products = Product::get();
+        $products = Product::limit(4)->get();
         $categories = Category::get();
         return view('index', compact('products', 'categories'));
     }
@@ -30,12 +30,12 @@ class MainController extends Controller
         return view('categories', compact('categories'));
     }
 
-    public function categoryGender(Request $request, $gender)
+    public function categoryGender(Request $request, $genderOnly)
     {
-       $products = FilterProductsService::filter($request, $gender);
+       $products = FilterProductsService::filter($request, $genderOnly);
 
         $properties = Property::get();
-        return view('category', compact('products', 'gender', 'properties'));
+        return view('category', compact('products', 'genderOnly', 'properties'));
     }
 
     public function category(Request $request, $gender, $code)
@@ -43,13 +43,15 @@ class MainController extends Controller
         $category = Category::where('code', $code)->first();
         $products = FilterProductsService::filter($request, $gender, $category->id);
         $properties = Property::get();
-        return view('category', ['category' => $category, 'products' => $products, 'properties' => $properties]);
+        return view('category', ['category' => $category, 'products' => $products, 'properties' => $properties, 'gender' => $gender]);
     }
 
     public function product($category, $product = null)
     {
-        //$product = Product::where('code', $product)->first();
-        return view('product', compact('product'));
+        $product = Product::where('code', $product)->first();
+        $propertyId = Property::where('name', 'размер')->first()->id;
+        $sizeValues = $product->values->where('property_id', $propertyId);
+        return view('product', compact('product', 'sizeValues'));
     }
 
     public function showOrders()
@@ -62,7 +64,8 @@ class MainController extends Controller
     {
         $order = Order::findOrFail($orderId);
         $products = $order->products;
-        return view('ordersHistory.orderDetails', compact('order', 'products'));
+        $propertyIdBrand = Property::where('name', 'бренд')->first()->id;
+        return view('ordersHistory.orderDetails', compact('order', 'products', 'propertyIdBrand'));
     }
 
     public function showFeedback()
@@ -106,8 +109,8 @@ class MainController extends Controller
         $search = $data['search'];
         $products = Product::where('name', 'ilike', '%' . $search . '%')
             ->orWhere('description', 'ilike', '%' . $search . '%')
-            ->get();
-        return view('index', compact(['products', 'search']));
+            ->paginate(6)->withPath('?' . $request->getQueryString());
+        return view('search', compact(['products', 'search']));
     }
 
 }

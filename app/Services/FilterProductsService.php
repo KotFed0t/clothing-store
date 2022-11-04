@@ -75,7 +75,7 @@ class FilterProductsService
                 }
             }
             return $matchedProperties == $countProperties; // по каждому свойству есть хотябы одно совпадение?
-        })->paginate(3)->withPath('?' . $request->getQueryString());
+        })->paginate(6)->withPath('?' . $request->getQueryString());
 
         return $products;
     }

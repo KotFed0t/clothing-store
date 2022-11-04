@@ -37,13 +37,15 @@
                     <td>
                         <div class="btn-group" role="group">
                             <form>
+                                @csrf
                                 <a class="btn btn-success" type="button"
                                    href="{{route('admin.showProduct', $product->id)}}">Открыть</a>
-                                <a class="btn btn-warning" type="button"
-                                   href="{{route('admin.showEditProduct', $product->id)}}">Редактировать</a>
-                                @csrf
-                                <a class="btn btn-danger" type="button"
-                                   href="{{route('admin.deleteProduct', $product->id)}}">удалить</a>
+                                @can('admin-manager')
+                                    <a class="btn btn-warning" type="button"
+                                       href="{{route('admin.showEditProduct', $product->id)}}">Редактировать</a>
+                                    <a class="btn btn-danger" type="button"
+                                       href="{{route('admin.deleteProduct', $product->id)}}">удалить</a>
+                                @endcan
                             </form>
                         </div>
                     </td>
@@ -51,6 +53,8 @@
             @endforeach
             </tbody>
         </table>
-        <a class="btn btn-success" type="button" href="{{ route('admin.createProduct') }}">Добавить товар</a>
+        @can('admin-manager')
+            <a class="btn btn-success" type="button" href="{{ route('admin.createProduct') }}">Добавить товар</a>
+        @endcan
     </div>
 @endsection

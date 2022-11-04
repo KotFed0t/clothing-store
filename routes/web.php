@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TwoFaController;
 use App\Http\Controllers\BasketController;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [MainController::class, 'index'])->name('index');
 
 Route::group([
-    'middleware' => 'CheckIsAdmin',
+    'middleware' => 'AdminManagerSupport',
     'prefix' => 'admin'
 ], function () {
     Route::get('/home', [AdminController::class, 'home'])->name('admin.home');
@@ -23,24 +24,28 @@ Route::group([
     Route::get('/orders/{id}', [OrderController::class, 'showOrderDetails'])->name('admin.orderDetails');
 
     Route::get('/categories', [CategoryController::class, 'showCategories'])->name('admin.categories');
-    Route::get('/categories/{id}/edit', [CategoryController::class, 'showEditCategory'])->name('admin.showEditCategory');
-    Route::post('/categories/{id}/edit', [CategoryController::class, 'editCategory'])->name('admin.editCategory');
-    Route::get('/categories/create', [CategoryController::class, 'showCreateCategory'])->name('admin.showCreateCategory');
-    Route::post('/categories/create', [CategoryController::class, 'createCategory'])->name('admin.createCategory');
-    Route::get('/categories/{id}/delete', [CategoryController::class, 'deleteCategory'])->name('admin.deleteCategory');
     Route::get('/categories/{id}', [CategoryController::class, 'showCategory'])->name('admin.showCategory');
 
     Route::get('/products', [ProductController::class, 'showProducts'])->name('admin.products');
+    Route::get('/products/{id}', [ProductController::class, 'showProduct'])->name('admin.showProduct');
+});
+
+
+Route::group([
+    'middleware' => 'AdminManager',
+    'prefix' => 'admin'
+], function () {
+    Route::get('/categories/{id}/edit', [CategoryController::class, 'showEditCategory'])->name('admin.showEditCategory');
+    Route::post('/categories/{id}/edit', [CategoryController::class, 'editCategory'])->name('admin.editCategory');
+    Route::get('/category/create', [CategoryController::class, 'showCreateCategory'])->name('admin.showCreateCategory');
+    Route::post('/category/create', [CategoryController::class, 'createCategory'])->name('admin.createCategory');
+    Route::get('/categories/{id}/delete', [CategoryController::class, 'deleteCategory'])->name('admin.deleteCategory');
+
     Route::get('/products/{id}/edit', [ProductController::class, 'showEditProduct'])->name('admin.showEditProduct');
     Route::post('/products/{id}/edit', [ProductController::class, 'editProduct'])->name('admin.editProduct');
-    Route::get('/products/create', [ProductController::class, 'showCreateProduct'])->name('admin.showCreateProduct');
-    Route::post('/products/create', [ProductController::class, 'createProduct'])->name('admin.createProduct');
+    Route::get('/product/create', [ProductController::class, 'showCreateProduct'])->name('admin.showCreateProduct');
+    Route::post('/product/create', [ProductController::class, 'createProduct'])->name('admin.createProduct');
     Route::get('/products/{id}/delete', [ProductController::class, 'deleteProduct'])->name('admin.deleteProduct');
-    Route::get('/products/{id}', [ProductController::class, 'showProduct'])->name('admin.showProduct');
-
-    Route::get('/tickets', [AdminController::class, 'tickets'])->name('admin.tickets');
-    Route::get('/tickets/{id}', [AdminController::class, 'ticketDetails'])->name('admin.ticketDetails');
-    Route::post('/tickets/response', [AdminController::class, 'ticketResponse'])->name('admin.ticketResponse');
 
     Route::get('/properties', [PropertyController::class, 'showProperties'])->name('admin.properties');
     Route::get('/properties/{id}/edit', [PropertyController::class, 'showEditProperty'])->name('admin.showEditProperty');
@@ -57,9 +62,33 @@ Route::group([
     Route::get('/values/{valueId}/delete', [PropertyController::class, 'deletePropertyValue'])->name('admin.deletePropertyValue');
 });
 
+
+Route::group([
+    'middleware' => 'AdminSupport',
+    'prefix' => 'admin'
+], function () {
+    Route::get('/tickets', [AdminController::class, 'tickets'])->name('admin.tickets');
+    Route::get('/tickets/{id}', [AdminController::class, 'ticketDetails'])->name('admin.ticketDetails');
+    Route::post('/tickets/response', [AdminController::class, 'ticketResponse'])->name('admin.ticketResponse');
+});
+
+
+Route::group([
+    'middleware' => 'Admin',
+    'prefix' => 'admin'
+], function () {
+    Route::get('/roles', [RoleController::class, 'index'])->name('admin.roles');
+    Route::get('/roles/{userId}/edit', [RoleController::class, 'showEditUserRole'])->name('admin.showEditUserRole');
+    Route::post('/roles/{userId}/edit', [RoleController::class, 'EditUserRole'])->name('admin.EditUserRole');
+    Route::get('/roles/create', [RoleController::class, 'showCreateUserRole'])->name('admin.showCreateUserRole');
+    Route::post('/roles/create', [RoleController::class, 'createUserRole'])->name('admin.CreateUserRole');
+    Route::get('/roles/{userId}/delete', [RoleController::class, 'deleteUserRole'])->name('admin.deleteUserRole');
+});
+
+
 Route::get('/basket', [BasketController::class, 'basket'])->name('basket');
-Route::post('/basket/add/{id}', [BasketController::class, 'basketAdd'])->name('basket-add');
-Route::post('/basket/remove/{id}', [BasketController::class, 'basketRemove'])->name('basket-remove');
+Route::post('/basket/add/{productId}/{sizeId?}', [BasketController::class, 'basketAdd'])->name('basket-add');
+Route::post('/basket/remove/{productId}/{sizeId}', [BasketController::class, 'basketRemove'])->name('basket-remove');
 
 Route::middleware('auth')->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -85,6 +114,14 @@ Route::middleware('guest')->group(function () {
     Route::get('login/2fa/show', [TwoFaController::class, 'loginShow2Fa'])->name('loginShow2Fa');
     Route::post('login/2fa/check', [TwoFaController::class, 'loginCheck2Fa'])->name('loginCheck2Fa');
 
+    Route::get('/resetPassword/send', [AuthController::class, 'showResetPasswordSend'])->name('showResetPasswordSend');
+    Route::post('/resetPassword/send', [AuthController::class, 'resetPasswordSend'])->name('resetPasswordSend');
+    Route::get('/resetPassword/set', [AuthController::class, 'showResetPasswordSet'])->name('showResetPasswordSet');
+    Route::post('/resetPassword/set', [AuthController::class, 'resetPasswordSet'])->name('resetPasswordSet');
+    Route::get('resetPassword/2fa/show', [TwoFaController::class, 'resetPasswordShow2Fa'])->name('resetPasswordShow2Fa');
+    Route::post('resetPassword/2fa/check', [TwoFaController::class, 'resetPasswordCheck2Fa'])->name('resetPasswordCheck2Fa');
+
+
 });
 
 Route::get('/search', [MainController::class, 'search'])->name('search');
@@ -98,5 +135,5 @@ Route::post('/feedback', [MainController::class, 'saveFeedback'])->name('saveFee
 Route::get('/categories/{gender}', [MainController::class, 'categoryGender'])->name('categoryGender');
 Route::get('/categories/{gender}/{category}', [MainController::class, 'category'])->name('category');
 
-Route::get('/categories/{category}/{product?}', [MainController::class, 'product'])->name('product');
+Route::get('/product/{category}/{product?}', [MainController::class, 'product'])->name('product');
 

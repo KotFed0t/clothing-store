@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
 @section('content')
-    @isset($gender)
-        <h2 class="text-center mt-5">Одежда для {{ $gender }}</h2>
+    @isset($genderOnly)
+        <h2 class="text-center ">Одежда для @if($genderOnly == 'man') мужчин@endif @if($genderOnly == 'woman') женщин@endif</h2>
     @endisset
     @isset($category)
-        <h2 class="text-center mt-5">{{ $category->name }} - category page</h2>
+        <h2 class="text-center">{{ $category->name }} для @if($gender == 'man') мужчин@endif @if($gender == 'woman') женщин@endif</h2>
     @endisset
     <div class="row">
         <div class="col-md-3 mt-5">
@@ -39,8 +39,8 @@
                         @endforeach
                     </section>
                 @endforeach
-                <button class="btn btn-success">Применить</button>
-                <a href="{{request()->url()}}" class="btn btn-warning">Сбросить фильтры</a>
+                <button class="btn btn-dark">Применить</button>
+                <a href="{{request()->url()}}" class="btn btn-outline-secondary"><span class="text-dark">Сбросить фильтры</span></a>
             </form>
         </div>
 
@@ -54,7 +54,7 @@
                     </div>
                 </div>
             </div>
-            {{ $products->links() }}
+            <div class="d-flex align-items-center justify-content-center">{{ $products->links() }}</div>
         </div>
     </div>
 @endsection

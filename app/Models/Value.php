@@ -30,4 +30,10 @@ class Value extends Model
             $this->upsert($data, ['product_id', 'value_id']);
         }
     }
+
+    public static function getSizeName($sizeId)
+    {
+        return Value::find($sizeId)->name;
+    }
+
 }

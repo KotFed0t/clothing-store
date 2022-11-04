@@ -51,6 +51,8 @@
 
                                     <p class="text-center text-muted mt-5 mb-0">Еще нет аккаунта? <a href="{{route('register')}}"
                                                                                                      class="fw-bold text-body"><u>Зарегистрироваться</u></a>
+                                    <p class="text-center text-muted mt-5 mb-0">Забыли пароль? <a href="{{route('showResetPasswordSend')}}"
+                                                                                                     class="fw-bold text-body"><u>Восстановить пароль</u></a>
                                     </p>
 
                                 </form>

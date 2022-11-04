@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Property;
 use App\Services\MailAuthService;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BasketController extends Controller
 {
@@ -17,7 +19,8 @@ class BasketController extends Controller
         if (!is_null($orderId)) {
             $order = Order::findOrFail($orderId);
         }
-        return view('basket', compact('order'));
+        $propertyIdBrand = Property::where('name', 'бренд')->first()->id;
+        return view('basket', compact('order', 'propertyIdBrand'));
 
     }
 
@@ -67,49 +70,47 @@ class BasketController extends Controller
         $payment->callback($request->ip());
     }
 
-    public function basketAdd($productId)
+    public function basketAdd(Request $request, $productId, $sizeId = null)
     {
+        if ($sizeId == null) {
+            $sizeId = $request->get('size_id');
+        }
+
         $orderId = session('orderId');
         if (is_null($orderId)) {
             $order = Order::create();
             session(['orderId' => $order->id]);
-        } else {
-            $order = Order::find($orderId);
+            $orderId = $order->id;
         }
 
-        if ($order->products->contains($productId)){
-            $pivotRow = $order->products()->where('product_id', $productId)->first()->pivot;
-            $pivotRow->count++;
-            $pivotRow->update();
+        $row = DB::table('order_product')->where('order_id', $orderId)->where('product_id', $productId)->where('size_id', $sizeId)->select()->first();
+        if ($row !== null) {
+            DB::table('order_product')->where('order_id', $orderId)->where('product_id', $productId)->where('size_id', $sizeId)->update(['count' => $row->count + 1]);
         } else {
-            $order->products()->attach($productId);
+            DB::table('order_product')->insert(['order_id' => $orderId, 'product_id' => $productId, 'count' => 1, 'size_id' => $sizeId]);
         }
 
-        $product = Product::find($productId);
-        session()->flash('success', "Товар \"$product->name\" добавлен в корзину");
+        session()->flash('success', "Товар добавлен в корзину");
         return redirect()->route('basket');
     }
 
-    public function basketRemove($productId)
+    public function basketRemove($productId, $sizeId)
     {
         $orderId = session('orderId');
         if (is_null($orderId)) {
             return redirect()->route('basket');
         }
-        $order = Order::find($orderId);
 
-        if ($order->products->contains($productId)){
-            $pivotRow = $order->products()->where('product_id', $productId)->first()->pivot;
-            if ($pivotRow->count < 2) {
-                $order->products()->detach($productId);
+        $row = DB::table('order_product')->where('order_id', $orderId)->where('product_id', $productId)->where('size_id', $sizeId)->select()->first();
+        if ($row !== null) {
+            if ($row->count < 2) {
+                DB::table('order_product')->where('order_id', $orderId)->where('product_id', $productId)->where('size_id', $sizeId)->delete();
             } else {
-                $pivotRow->count--;
-                $pivotRow->update();
+                DB::table('order_product')->where('order_id', $orderId)->where('product_id', $productId)->where('size_id', $sizeId)->update(['count' => $row->count - 1]);
             }
         }
 
-        $product = Product::find($productId);
-        session()->flash('warning', "Товар \"$product->name\" удален из корзины");
+        session()->flash('warning', "Товар удален из корзины");
 
         return redirect()->route('basket');
     }

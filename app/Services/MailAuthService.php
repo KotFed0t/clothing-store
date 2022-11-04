@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Mail\EmailAuthLogin;
 use App\Mail\EmailAuthOrder;
+use App\Mail\EmailAuthResetPassword;
 use App\Mail\EmailConfirmation;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
@@ -28,8 +29,8 @@ class MailAuthService
         $user->save();
 
         switch ($action) {
-            case 'register':
-                Mail::to($user->email)->send(new EmailConfirmation($code));
+            case 'resetPassword':
+                Mail::to($user->email)->send(new EmailAuthResetPassword($code));
                 break;
             case 'login':
                 Mail::to($user->email)->send(new EmailAuthLogin($code));
@@ -38,5 +39,16 @@ class MailAuthService
                 Mail::to($user->email)->send(new EmailAuthOrder($code, $order));
                 break;
         }
+    }
+
+    public function sendRegistrationCode($email)
+    {
+        $code = $this->generateCode();
+        session([
+            'email_code' => $code,
+            'email_code_expiration' => time() + 300
+        ]);
+        Mail::to($email)->send(new EmailConfirmation($code));
+
     }
 }

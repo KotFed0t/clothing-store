@@ -16,7 +16,7 @@ class TwoFaController extends Controller
 {
     public function registerShow2Fa()
     {
-        if(session('secret') === null) {
+        if(session('google_auth_secret') === null) {
             return redirect()->route('register');
         }
         return view('twoFa.register2Fa');
@@ -24,7 +24,7 @@ class TwoFaController extends Controller
 
     public function registerCheck2Fa(Request $request)
     {
-        if(session('secret') === null) {
+        if(session('google_auth_secret') === null) {
             return redirect()->route('register');
         }
 
@@ -35,28 +35,33 @@ class TwoFaController extends Controller
             'googleAuthCode' => ['required']
         ]);
 
-        $userId = session('userId');
-        $user = User::findOrFail($userId);
-
-
-        if (time() > $user->email_code_expiration) {
+        if (time() > session('email_code_expiration')) {
             return redirect()->route('registerShow2Fa')->withErrors(['email_code' => 'время жизни кода истекло']);
         }
 
-        if ($data['email_code'] != $user->email_code) {
+        if ($data['email_code'] != session('email_code')) {
             return redirect()->route('registerShow2Fa')->withErrors(['email_code' => 'введен неверный код']);
         }
 
-        if (!$ga->verifyCode($user->google_auth_secret, $data['googleAuthCode'])) {
+        if (!$ga->verifyCode(session('google_auth_secret'), $data['googleAuthCode'])) {
             return redirect()->route('registerShow2Fa')->withErrors(['googleAuthCode' => 'введен неверный код']);
         }
 
-        $user->email_status = 'verified';
-        $user->save();
+        $user = User::create([
+            'name' => session('name'),
+            'email' => session('email'),
+            'password' => session('password'),
+            'phone' => session('phone'),
+            'google_auth_secret' => session('google_auth_secret')
+        ]);
 
-        session()->forget(['userId', 'secret', 'qrCodeUrl', 'captcha']);
-
-        return redirect()->route('login');
+        session()->forget(['name', 'email', 'password', 'phone', 'google_auth_secret', 'email_code', 'email_code_expiration']);
+        if ($user) {
+            session()->flash('success', 'Регистрация прошла успешно. Войдите в свой аккаунт');
+            return redirect()->route('login');
+        }
+        session()->flash('warning', 'Что-то пошло не так, попробуйте пройти регистрацию еще раз');
+        return redirect()->route('register');
     }
 
     public function loginShow2Fa()
@@ -148,6 +153,52 @@ class TwoFaController extends Controller
 
         return redirect($link);
     }
+    public function resetPasswordShow2Fa()
+    {
+        if(session('fromResetPassword') === null) {
+            return redirect()->route('index');
+        }
 
+        return view('twoFa.2Fa', ['fromResetPassword' => true]);
+    }
+
+    public function resetPasswordCheck2Fa(Request $request)
+    {
+        if(session('fromResetPassword') === null) {
+            return redirect()->route('index');
+        }
+
+        $ga = new GoogleAuth();
+
+        $data = $request->validate([
+            'email_code' => ['required'],
+            'googleAuthCode' => ['required']
+        ]);
+
+        $userId = session('userId');
+        $user = User::findOrFail($userId);
+
+
+        if (time() > $user->email_code_expiration) {
+            return redirect()->route('resetPasswordShow2Fa')->withErrors(['email_code' => 'время жизни кода истекло']);
+        }
+
+        if ($data['email_code'] != $user->email_code) {
+            return redirect()->route('resetPasswordShow2Fa')->withErrors(['email_code' => 'введен неверный код']);
+        }
+
+        if (!$ga->verifyCode($user->google_auth_secret, $data['googleAuthCode'])) {
+            return redirect()->route('resetPasswordShow2Fa')->withErrors(['googleAuthCode' => 'введен неверный код']);
+        }
+
+        $user->password = session('password');
+        $user->reset_password_token = null;
+        $user->token_expiration = null;
+        $user->save();
+
+        session()->forget(['userId', 'fromResetPassword', 'password']);
+        session()->flash('success', "Пароль успешно изменен!");
+        return redirect()->route('login');
+    }
 
 }
