@@ -25,7 +25,7 @@
                    <td valign="middle">{{$product->values->where('property_id', $propertyIdBrand)->first()->name}}</td>
 
                     <td valign="middle" scope="row">
-                        <p>{{\App\Models\Value::getSizeName($product->pivot->size_id)}}</p>
+                        {{\App\Models\Value::getSizeName($product->pivot->size_id)}}
                     </td>
                     <td valign="middle">
                         <span class="badge bg-dark">{{$product->pivot->count}}</span>

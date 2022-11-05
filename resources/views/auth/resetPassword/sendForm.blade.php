@@ -8,34 +8,33 @@
                     <div class="col-12 col-md-9 col-lg-7 col-xl-6">
                         <div class="card" style="border-radius: 15px;">
                             <div class="card-body p-5">
-                                <h2 class="text-uppercase text-center mb-5">Войти</h2>
+                                <h2 class="text-uppercase text-center mb-5">Восстановить пароль</h2>
 
                                 <form action="{{route('resetPasswordSend')}}" method="POST">
                                     @csrf
-
+                                    @error('email')
+                                    <p class="text-danger">{{$message}}</p>
+                                    @enderror
                                     <div class="form-outline mb-4">
-                                        <input name="email" type="email" value="{{old('email')}}" id="form3Example3cg" class="form-control form-control-lg"/>
-                                        <label class="form-label" for="form3Example3cg">Email</label>
+                                        <input name="email" type="email" value="{{old('email')}}" id="form3Example3cg" class="form-control form-control-lg" placeholder="Email"/>
                                     </div>
 
-                                    @error('email')
-                                    <p class="text-red-500">{{$message}}</p>
-                                    @enderror
+
 
 
                                     <img class="mb-2" src="data:image/png;base64,{{$captchaImg}}" style="width: 200px; border-radius: .25rem;">
-                                    <div class="form-outline mb-4">
-                                        <input name="captcha" type="text" id="form3Example3cg" class="form-control form-control-lg"/>
-                                        <label class="form-label" for="form3Example3cg">Введите текст капчи</label>
+                                    @error('captcha')
+                                    <p class="text-danger">{{$message}}</p>
+                                    @enderror
+                                    <div class="form-outline mb-5">
+                                        <input name="captcha" type="text" id="form3Example3cg" class="form-control form-control-lg" placeholder="Введите текст капчи"/>
                                     </div>
 
-                                    @error('captcha')
-                                    <p class="text-red-500">{{$message}}</p>
-                                    @enderror
+
 
                                     <div class="d-flex justify-content-center">
                                         <button type="submit"
-                                                class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
+                                                class="btn bg-dark text-white btn-lg px-5">
                                             Отправить
                                         </button>
                                     </div>

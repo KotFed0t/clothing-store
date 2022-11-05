@@ -12,28 +12,26 @@
 
                                 <form action="{{route('resetPasswordSet')}}" method="POST">
                                     @csrf
-
-                                    <div class="form-outline mb-4">
-                                        <input name="password" type="password" id="form3Example4cg" class="form-control form-control-lg" />
-                                        <label class="form-label" for="form3Example4cg">Новый пароль</label>
-                                    </div>
-
                                     @error('password')
-                                    <p class="text-red-500">{{$message}}</p>
+                                    <p class="text-danger">{{$message}}</p>
                                     @enderror
-
-                                    <div class="form-outline mb-4">
-                                        <input name="password_confirmation" type="password" id="form3Example4cdg" class="form-control form-control-lg" />
-                                        <label class="form-label" for="form3Example4cdg">Повторите пароль</label>
+                                    <div class="form-outline mb-5">
+                                        <input name="password" type="password" id="form3Example4cg" class="form-control form-control-lg" placeholder="Новый пароль"/>
                                     </div>
+
 
                                     @error('password_confirmation')
-                                    <p class="text-red-500">{{$message}}</p>
+                                    <p class="text-danger">{{$message}}</p>
                                     @enderror
+                                    <div class="form-outline mb-5">
+                                        <input name="password_confirmation" type="password" id="form3Example4cdg" class="form-control form-control-lg" placeholder="Повторите пароль"/>
+                                    </div>
+
+
 
                                     <div class="d-flex justify-content-center">
                                         <button type="submit"
-                                                class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
+                                                class="btn bg-dark text-white btn-lg px-5">
                                             сохранить
                                         </button>
                                     </div>

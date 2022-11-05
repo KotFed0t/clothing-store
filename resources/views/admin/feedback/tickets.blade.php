@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('content')
-    <h1 class="text-center mt-5">Обращения</h1>
+    <h1 class="text-center mb-5">Обращения</h1>
 
     <table class="table table-striped">
         <thead>
@@ -28,7 +28,7 @@
                     <td style="text-overflow: ellipsis;">{{$ticket->text}}</td>
                     <td>{{$ticket->created_at}}</td>
                     <td>{{$ticket->status}}</td>
-                    <td><a href="{{route('admin.ticketDetails', $ticket->id)}}">Открыть</a></td>
+                    <td><a href="{{route('admin.ticketDetails', $ticket->id)}}" class="btn bg-dark text-white">Открыть</a></td>
                 </tr>
             @endforeach
         @endisset

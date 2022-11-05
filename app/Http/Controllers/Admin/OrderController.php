@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Mail\EmailOrderStatus;
 use App\Models\Order;
+use App\Models\Property;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -28,6 +29,7 @@ class OrderController extends Controller
     public function showOrderDetails(Request $request, $orderId) {
         $order = Order::find($orderId);
         $products = $order->products;
+        $propertyIdBrand = Property::where('name', 'бренд')->first()->id;
         $userEmail = User::find($order->user_id)->email;
 
         if ($request->has('status_id')) {
@@ -36,7 +38,7 @@ class OrderController extends Controller
             Mail::to($userEmail)->send(new EmailOrderStatus($order));
             session()->flash('success', 'Статус заказа успешно обновлен');
         }
-        return view('admin.orderDetails', compact('order', 'products'));
+        return view('admin.orderDetails', compact('order', 'products', 'propertyIdBrand'));
     }
 
 

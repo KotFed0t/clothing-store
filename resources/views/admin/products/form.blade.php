@@ -9,9 +9,9 @@
 @section('content')
     <div class="col-md-12">
         @isset($product)
-            <h1>Редактировать товар <b>{{ $product->name }}</b></h1>
+            <h1 class="mb-5">Редактировать товар <b>{{ $product->name }}</b></h1>
         @else
-            <h1>Добавить товар</h1>
+            <h1 class="mb-5">Добавить товар</h1>
         @endisset
         <form method="POST" enctype="multipart/form-data"
               @isset($product)
@@ -108,7 +108,7 @@
                 <div class="input-group row">
                     <label for="description" class="col-sm-2 col-form-label">Описание: </label>
                     <div class="col-sm-6">
-                        <textarea name="description" id="description" cols="72"
+                        <textarea name="description" id="description" cols="72" class="px-4"
                                   rows="7">@isset($product){{ $product->description }}@endisset</textarea>
                     </div>
                 </div>
@@ -121,18 +121,30 @@
                     </div>
                 </div>
                 <br>
+                @isset($product)
+                    <div class="input-group row">
+                        <label for="images" class="col-sm-2 col-form-label">Картинки: </label>
+                        <div class="col-sm-6">
+                            <img src="{{ Storage::url($product->image) }}" height="240px">
+                            @foreach($product->images() as $image)
+                                <img src="{{ Storage::url($image) }}" height="240px">
+                            @endforeach
+                        </div>
+                    </div>
+                    <br>
+                @endisset
                 <div class="input-group row">
                     <label for="image" class="col-sm-2 col-form-label">Основное изображение: </label>
                     <div class="col-sm-2">
-                        <label class="btn btn-default btn-file">
+                        <label class="btn btn-default btn-file border-dark">
                             Загрузить <input type="file" style="display: none;" name="image" id="image">
                         </label>
                     </div>
                 </div>
-                <div class="input-group row">
+                <div class="input-group row mt-2">
                     <label for="image" class="col-sm-2 col-form-label">Доп. изображения: </label>
                     <div class="col-sm-2">
-                        <label class="btn btn-default btn-file">
+                        <label class="btn btn-default btn-file border-dark">
                             Загрузить <input type="file" style="display: none;" name="images[]" id="image" multiple>
                         </label>
                     </div>

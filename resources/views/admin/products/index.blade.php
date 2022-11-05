@@ -4,12 +4,12 @@
 
 @section('content')
     <div class="col-md-12">
-        <h1>Товары</h1>
+        <h1 class="mb-5">Товары</h1>
         <table class="table">
             <tbody>
             <tr>
                 <th>
-                    #
+                    id
                 </th>
                 <th>
                     Код
@@ -29,12 +29,12 @@
             </tr>
             @foreach($products as $product)
                 <tr>
-                    <td>{{ $product->id}}</td>
-                    <td>{{ $product->code }}</td>
-                    <td>{{ $product->name }}</td>
-                    <td>{{ $product->category->name }}</td>
-                    <td>{{ $product->price }} р.</td>
-                    <td>
+                    <td valign="middle">{{ $product->id}} &nbsp; <img src="{{Storage::url($product->image)}}" width="80px" height="80px"></td>
+                    <td valign="middle">{{ $product->code }}</td>
+                    <td valign="middle">{{ $product->name }}</td>
+                    <td valign="middle">{{ $product->category->name }}</td>
+                    <td valign="middle">{{ $product->price }} р.</td>
+                    <td valign="middle">
                         <div class="btn-group" role="group">
                             <form>
                                 @csrf

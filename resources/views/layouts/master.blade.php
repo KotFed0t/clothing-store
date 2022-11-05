@@ -9,6 +9,19 @@
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/starter-template.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- gLightbox gallery-->
+{{--    <link rel="stylesheet" href="public/vendor/glightbox/css/glightbox.min.css">--}}
+    <link rel="stylesheet" href="{{asset('vendor//glightbox/css/glightbox.min.css')}}">
+    <!-- Range slider-->
+{{--    <link rel="stylesheet" href="public/vendor/nouislider/nouislider.min.css">--}}
+    <link rel="stylesheet" href="{{asset('vendor/nouislider/nouislider.min.css')}}">
+    <!-- Choices CSS-->
+{{--    <link rel="stylesheet" href="public/vendor/choices.js/public/assets/styles/choices.min.css">--}}
+    <link rel="stylesheet" href="{{asset('vendor/choices.js/public/assets/styles/choices.min.css')}}">
+    <!-- Swiper slider-->
+{{--    <link rel="stylesheet" href="public/vendor/swiper/swiper-bundle.min.css">--}}
+    <link rel="stylesheet" href="{{asset('vendor/swiper/swiper-bundle.min.css')}}">
 </head>
 <body>
 
@@ -148,5 +161,38 @@
 <!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 {{--<script src="https://kit.fontawesome.com/7f724dbb77.js" crossorigin="anonymous"></script>--}}
+
+<!-- JavaScript files-->
+<script src="{{asset('vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src="{{asset('vendor/glightbox/js/glightbox.min.js')}}"></script>
+<script src="{{asset('vendor/nouislider/nouislider.min.js')}}"></script>
+<script src="{{asset('vendor/swiper/swiper-bundle.min.js')}}"></script>
+<script src="{{asset('vendor/choices.js/public/assets/scripts/choices.min.js')}}"></script>
+<script src="{{asset('js/front.js')}}"></script>
+<script>
+    // ------------------------------------------------------- //
+    //   Inject SVG Sprite -
+    //   see more here
+    //   https://css-tricks.com/ajaxing-svg-sprite/
+    // ------------------------------------------------------ //
+    function injectSvgSprite(path) {
+
+        var ajax = new XMLHttpRequest();
+        ajax.open("GET", path, true);
+        ajax.send();
+        ajax.onload = function(e) {
+            var div = document.createElement("div");
+            div.className = 'd-none';
+            div.innerHTML = ajax.responseText;
+            document.body.insertBefore(div, document.body.childNodes[0]);
+        }
+    }
+    // this is set to BootstrapTemple website as you cannot
+    // inject local SVG sprite (using only 'icons/orion-svg-sprite.svg' path)
+    // while using file:// protocol
+    // pls don't forget to change to your domain :)
+    injectSvgSprite('https://bootstraptemple.com/files/icons/orion-svg-sprite.svg');
+
+</script>
 </body>
 </html>

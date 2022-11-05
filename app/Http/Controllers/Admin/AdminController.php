@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Mail\EmailTicketResponse;
+use App\Models\Product;
 use App\Models\Ticket;
 use App\Models\TicketResponse;
 use Illuminate\Http\Request;
@@ -15,7 +16,8 @@ class AdminController extends Controller
 {
     public function home()
     {
-        return view('admin.home');
+        $products = Product::orderBy('id', 'DESC')->get();
+        return view('admin.products.index', compact('products'));
     }
 
     public function tickets()

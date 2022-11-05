@@ -36,15 +36,15 @@ class TwoFaController extends Controller
         ]);
 
         if (time() > session('email_code_expiration')) {
-            return redirect()->route('registerShow2Fa')->withErrors(['email_code' => 'время жизни кода истекло']);
+            return redirect()->route('registerShow2Fa')->withInput()->withErrors(['email_code' => 'время жизни кода истекло']);
         }
 
         if ($data['email_code'] != session('email_code')) {
-            return redirect()->route('registerShow2Fa')->withErrors(['email_code' => 'введен неверный код']);
+            return redirect()->route('registerShow2Fa')->withInput()->withErrors(['email_code' => 'введен неверный код']);
         }
 
         if (!$ga->verifyCode(session('google_auth_secret'), $data['googleAuthCode'])) {
-            return redirect()->route('registerShow2Fa')->withErrors(['googleAuthCode' => 'введен неверный код']);
+            return redirect()->route('registerShow2Fa')->withInput()->withErrors(['googleAuthCode' => 'введен неверный код']);
         }
 
         $user = User::create([
@@ -91,15 +91,15 @@ class TwoFaController extends Controller
 
 
         if (time() > $user->email_code_expiration) {
-            return redirect()->route('loginShow2Fa')->withErrors(['email_code' => 'время жизни кода истекло']);
+            return redirect()->route('loginShow2Fa')->withInput()->withErrors(['email_code' => 'время жизни кода истекло']);
         }
 
         if ($data['email_code'] != $user->email_code) {
-            return redirect()->route('loginShow2Fa')->withErrors(['email_code' => 'введен неверный код']);
+            return redirect()->route('loginShow2Fa')->withInput()->withErrors(['email_code' => 'введен неверный код']);
         }
 
         if (!$ga->verifyCode($user->google_auth_secret, $data['googleAuthCode'])) {
-            return redirect()->route('loginShow2Fa')->withErrors(['googleAuthCode' => 'введен неверный код']);
+            return redirect()->route('loginShow2Fa')->withInput()->withErrors(['googleAuthCode' => 'введен неверный код']);
         }
 
         session()->forget(['userId', 'fromLogin', 'captcha']);
@@ -133,15 +133,15 @@ class TwoFaController extends Controller
         ]);
 
         if (time() > $user->email_code_expiration) {
-            return redirect()->route('orderShow2Fa')->withErrors(['email_code' => 'время жизни кода истекло']);
+            return redirect()->route('orderShow2Fa')->withInput()->withErrors(['email_code' => 'время жизни кода истекло']);
         }
 
         if ($data['email_code'] != $user->email_code) {
-            return redirect()->route('orderShow2Fa')->withErrors(['email_code' => 'введен неверный код']);
+            return redirect()->route('orderShow2Fa')->withInput()->withErrors(['email_code' => 'введен неверный код']);
         }
 
         if (!$ga->verifyCode($user->google_auth_secret, $data['googleAuthCode'])) {
-            return redirect()->route('orderShow2Fa')->withErrors(['googleAuthCode' => 'введен неверный код']);
+            return redirect()->route('orderShow2Fa')->withInput()->withErrors(['googleAuthCode' => 'введен неверный код']);
         }
 
         $order = Order::find(session('orderId'));
@@ -180,15 +180,15 @@ class TwoFaController extends Controller
 
 
         if (time() > $user->email_code_expiration) {
-            return redirect()->route('resetPasswordShow2Fa')->withErrors(['email_code' => 'время жизни кода истекло']);
+            return redirect()->route('resetPasswordShow2Fa')->withInput()->withErrors(['email_code' => 'время жизни кода истекло']);
         }
 
         if ($data['email_code'] != $user->email_code) {
-            return redirect()->route('resetPasswordShow2Fa')->withErrors(['email_code' => 'введен неверный код']);
+            return redirect()->route('resetPasswordShow2Fa')->withInput()->withErrors(['email_code' => 'введен неверный код']);
         }
 
         if (!$ga->verifyCode($user->google_auth_secret, $data['googleAuthCode'])) {
-            return redirect()->route('resetPasswordShow2Fa')->withErrors(['googleAuthCode' => 'введен неверный код']);
+            return redirect()->route('resetPasswordShow2Fa')->withInput()->withErrors(['googleAuthCode' => 'введен неверный код']);
         }
 
         $user->password = session('password');

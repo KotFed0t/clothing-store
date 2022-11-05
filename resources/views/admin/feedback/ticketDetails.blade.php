@@ -1,7 +1,7 @@
 @extends('admin.layouts.master')
 
 @section('content')
-    <h1 class="text-center mt-5">Обращение</h1>
+    <h1 class="text-center mb-5">Обращение</h1>
 
     <table class="table table-striped">
         <thead>
@@ -65,7 +65,7 @@
             <div class="input-group row">
                 <label for="status_id" class="col-sm-2 col-form-label">Сменить статус обращения: </label>
                 <div class="col-sm-6">
-                    <select name="status" id="status_id" class="form-control">
+                    <select name="status" id="status_id" class="form-control p-1">
                         <option value="in_progress" selected>В процессе</option>
                         <option value="solved">Решен</option>
                     </select>
@@ -78,7 +78,7 @@
             <div class="input-group row">
                 <label for="text_id" class="col-sm-2 col-form-label">Сообщение </label>
                 <div class="col-sm-6">
-                        <textarea name="text" id="text_id" cols="72"
+                        <textarea name="text" id="text_id" cols="72" class="px-4"
                                   rows="7"></textarea>
                 </div>
             </div>

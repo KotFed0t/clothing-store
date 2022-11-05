@@ -51,7 +51,11 @@ class MainController extends Controller
         $product = Product::where('code', $product)->first();
         $propertyId = Property::where('name', 'размер')->first()->id;
         $sizeValues = $product->values->where('property_id', $propertyId);
-        return view('product', compact('product', 'sizeValues'));
+
+        $propertyIdBrand = Property::where('name', 'бренд')->first()->id;
+        $propertyIdMaterial = Property::where('name', 'материал')->first()->id;
+        $propertyIdColor = Property::where('name', 'цвет')->first()->id;
+        return view('product', compact('product', 'sizeValues', 'propertyIdBrand', 'propertyIdMaterial', 'propertyIdColor'));
     }
 
     public function showOrders()

@@ -1,14 +1,15 @@
 @extends('layouts.master')
 
 @section('content')
-    @isset($genderOnly)
-        <h2 class="text-center ">Одежда для @if($genderOnly == 'man') мужчин@endif @if($genderOnly == 'woman') женщин@endif</h2>
-    @endisset
-    @isset($category)
-        <h2 class="text-center">{{ $category->name }} для @if($gender == 'man') мужчин@endif @if($gender == 'woman') женщин@endif</h2>
-    @endisset
+{{--    @isset($genderOnly)--}}
+{{--        <h2 class="text-center ">Одежда для @if($genderOnly == 'man') мужчин@endif @if($genderOnly == 'woman') женщин@endif</h2>--}}
+{{--    @endisset--}}
+{{--    @isset($category)--}}
+{{--        <h2 class="text-center">{{ $category->name }} для @if($gender == 'man') мужчин@endif @if($gender == 'woman') женщин@endif</h2>--}}
+{{--    @endisset--}}
     <div class="row">
         <div class="col-md-3 mt-5">
+            <div class="mb-5"></div>
             <form action="" method="get">
 
                 <h5>Сортировать по:</h5>
@@ -45,6 +46,12 @@
         </div>
 
         <div class="col-md-9">
+            @isset($genderOnly)
+                <h2 class="text-center ">Одежда для @if($genderOnly == 'man') мужчин@endif @if($genderOnly == 'woman') женщин@endif</h2>
+            @endisset
+            @isset($category)
+                <h2 class="text-center">{{ $category->name }} для @if($gender == 'man') мужчин@endif @if($gender == 'woman') женщин@endif</h2>
+            @endisset
             <div class="album py-5">
                 <div class="container">
                     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">

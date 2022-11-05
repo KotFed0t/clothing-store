@@ -48,6 +48,8 @@
         <tr>
             <th scope="col">Название</th>
             <th scope="col">Категория</th>
+            <th scope="col">Бренд</th>
+            <th scope="col">Размер</th>
             <th scope="col">Количество</th>
             <th scope="col">Цена</th>
             <th scope="col">Стоимость</th>
@@ -57,11 +59,14 @@
         @isset($products)
             @foreach($products as $product)
                 <tr>
-                    <td><a href="{{route('product', [$product->category->code, $product->code])}}">{{$product->name}}</a></td>
-                    <td>{{$product->category->name}}</td>
-                    <td>{{$product->pivot->count}}</td>
-                    <td>{{$product->price}}</td>
-                    <td>{{$product->getPriceForCount()}}</td>
+                    <td valign="middle"><img src="{{Storage::url($product->image)}}" width="80px" height="80px"> <a class="text-decoration-none"
+                                                                                                                    href="{{route('product', [$product->category->code, $product->code])}}">{{$product->name}}</a></td>
+                    <td valign="middle">{{$product->category->name}}</td>
+                    <td valign="middle">{{$product->values->where('property_id', $propertyIdBrand)->first()->name}}</td>
+                    <td valign="middle">{{\App\Models\Value::getSizeName($product->pivot->size_id)}}</td>
+                    <td valign="middle">{{$product->pivot->count}}</td>
+                    <td valign="middle">{{$product->price}}</td>
+                    <td valign="middle">{{$product->getPriceForCount()}}</td>
                 </tr>
             @endforeach
         @endisset

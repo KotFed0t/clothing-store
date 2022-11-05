@@ -14,22 +14,20 @@
                                     @csrf
 
                                     <div class="form-outline mb-4">
-                                        <input name="email_code" value="{{old('email_code')}}" id="form3Example3cg" class="form-control form-control-lg"/>
-                                        <label class="form-label" for="form3Example3cg">Введите код, отправленный вам на почту</label>
+                                        <input name="email_code" value="{{old('email_code')}}" id="form3Example3cg" class="form-control form-control-lg" placeholder="Введите код, отправленный вам на почту"/>
                                     </div>
 
                                     @error('email_code')
                                     <p class="text-red-500">{{$message}}</p>
                                     @enderror
 
-                                    <p>Сохраните секретный ключ в безопасное место</p>
+                                    <p>Сохраните секретный ключ в безопасное место. После утери восстановить его будет невозможно!</p>
                                     <p>Секретный ключ: {{session('secret')}}</p>
-                                    <img src="{{session('qrCodeUrl')}}" alt="">
+                                    <img src="{{session('qrCodeUrl')}}" alt="" class="mb-4">
 
-                                    <div class="form-outline mb-4">
+                                    <div class="form-outline mb-5">
                                         <input name="googleAuthCode"  value="{{old('googleAuthCode')}}" id="form3Example4cg"
-                                               class="form-control form-control-lg"/>
-                                        <label class="form-label" for="form3Example4cg">Введите код из Google Authenticator</label>
+                                               class="form-control form-control-lg" placeholder="Введите код из Google Authenticator"/>
                                     </div>
 
                                     @error('googleAuthCode')
@@ -39,7 +37,7 @@
 
                                     <div class="d-flex justify-content-center">
                                         <button type="submit"
-                                                class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
+                                                class="btn bg-dark text-white btn-block btn-lg px-5">
                                             Отправить
                                         </button>
                                     </div>

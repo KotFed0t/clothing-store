@@ -52,7 +52,7 @@
                         @error('description')
                         <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
-                        <textarea name="description" id="description" cols="72"
+                        <textarea name="description" id="description" cols="72" class="px-4"
                                   rows="7">@isset($category){{ $category->description }}@endisset</textarea>
                     </div>
                 </div>
@@ -61,8 +61,8 @@
 
                 <div class="input-group row">
                     <label for="image" class="col-sm-2 col-form-label">Картинка: </label>
-                    <div class="col-sm-2">
-                        <label class="btn btn-default btn-file">
+                    <div class="col-sm-2 text-start">
+                        <label class="btn btn-default btn-file border-dark">
                             Загрузить <input type="file" style="display: none;" name="image" id="image">
                         </label>
                     </div>

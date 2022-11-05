@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="col-md-12">
-        <h1>Категории</h1>
+        <h1 class="mb-5">Категории</h1>
         <table class="table">
             <tbody>
             <tr>

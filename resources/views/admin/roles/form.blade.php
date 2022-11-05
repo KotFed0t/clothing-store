@@ -26,7 +26,7 @@
                 <br>
                 <div class="input-group row">
                     <label for="email" class="col-sm-2 col-form-label">Email: </label>
-                    <div class="col-sm-4">
+                    <div class="col-sm-2">
                         @error('email')
                         <div class="alert alert-danger">{{ $message }}</div>
                         @enderror
@@ -45,7 +45,7 @@
                 @enderror
                 <div class="input-group row">
                     <label for="email" class="col-sm-2 col-form-label">Роли: </label>
-                        <div class="form-check col-sm-4">
+                        <div class="form-check col-sm-2">
                             @foreach($roles as $role)
                             <input name="roles_id[]" class="form-check-input" type="checkbox" value="{{$role->id}}"
                                    @isset($user)

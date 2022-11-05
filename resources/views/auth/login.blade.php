@@ -12,46 +12,44 @@
 
                                 <form action="{{route('login_process')}}" method="POST">
                                     @csrf
-
-                                    <div class="form-outline mb-4">
-                                        <input name="email" type="email" value="{{old('email')}}" id="form3Example3cg" class="form-control form-control-lg"/>
-                                        <label class="form-label" for="form3Example3cg">Email</label>
-                                    </div>
-
                                     @error('email')
-                                    <p class="text-red-500">{{$message}}</p>
+                                    <p class="text-danger">{{$message}}</p>
                                     @enderror
-
-                                    <div class="form-outline mb-4">
-                                        <input name="password" type="password" id="form3Example4cg"
-                                               class="form-control form-control-lg"/>
-                                        <label class="form-label" for="form3Example4cg">Пароль</label>
+                                    <div class="form-outline mb-5">
+                                        <input name="email" type="email" value="{{old('email')}}" id="form3Example3cg" class="form-control form-control-lg" placeholder="Email"/>
                                     </div>
+
 
                                     @error('password')
-                                    <p class="text-red-500">{{$message}}</p>
+                                    <p class="text-danger">{{$message}}</p>
                                     @enderror
-
-                                    <img class="mb-2" src="data:image/png;base64,{{$captchaImg}}" style="width: 200px; border-radius: .25rem;">
                                     <div class="form-outline mb-4">
-                                        <input name="captcha" type="text" id="form3Example3cg" class="form-control form-control-lg"/>
-                                        <label class="form-label" for="form3Example3cg">Введите текст капчи</label>
+                                        <input name="password" type="password" id="form3Example4cg"
+                                               class="form-control form-control-lg" placeholder="Пароль"/>
                                     </div>
 
+
+
+                                    <img class="mb-2" src="data:image/png;base64,{{$captchaImg}}" style="width: 200px; border-radius: .25rem;">
                                     @error('captcha')
-                                    <p class="text-red-500">{{$message}}</p>
+                                    <p class="text-danger">{{$message}}</p>
                                     @enderror
+                                    <div class="form-outline mb-5">
+                                        <input name="captcha" type="text" id="form3Example3cg" class="form-control form-control-lg" placeholder="Введите текст капчи"/>
+                                    </div>
+
+
 
                                     <div class="d-flex justify-content-center">
                                         <button type="submit"
-                                                class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">
+                                                class="btn bg-dark text-white btn-lg px-5">
                                             Войти
                                         </button>
                                     </div>
 
                                     <p class="text-center text-muted mt-5 mb-0">Еще нет аккаунта? <a href="{{route('register')}}"
                                                                                                      class="fw-bold text-body"><u>Зарегистрироваться</u></a>
-                                    <p class="text-center text-muted mt-5 mb-0">Забыли пароль? <a href="{{route('showResetPasswordSend')}}"
+                                    <p class="text-center text-muted mt-3 mb-0">Забыли пароль? <a href="{{route('showResetPasswordSend')}}"
                                                                                                      class="fw-bold text-body"><u>Восстановить пароль</u></a>
                                     </p>
 
