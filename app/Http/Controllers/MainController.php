@@ -21,7 +21,8 @@ class MainController extends Controller
     {
         $products = Product::limit(4)->get();
         $categories = Category::get();
-        return view('index', compact('products', 'categories'));
+        $propertyIdBrand = Property::where('name', 'бренд')->first()->id;
+        return view('index', compact('products', 'categories', 'propertyIdBrand'));
     }
 
     public function categories()
@@ -35,7 +36,8 @@ class MainController extends Controller
        $products = FilterProductsService::filter($request, $genderOnly);
 
         $properties = Property::get();
-        return view('category', compact('products', 'genderOnly', 'properties'));
+        $propertyIdBrand = Property::where('name', 'бренд')->first()->id;
+        return view('category', compact('products', 'genderOnly', 'properties', 'propertyIdBrand'));
     }
 
     public function category(Request $request, $gender, $code)
@@ -43,7 +45,8 @@ class MainController extends Controller
         $category = Category::where('code', $code)->first();
         $products = FilterProductsService::filter($request, $gender, $category->id);
         $properties = Property::get();
-        return view('category', ['category' => $category, 'products' => $products, 'properties' => $properties, 'gender' => $gender]);
+        $propertyIdBrand = Property::where('name', 'бренд')->first()->id;
+        return view('category', ['category' => $category, 'products' => $products, 'properties' => $properties, 'gender' => $gender, 'propertyIdBrand' => $propertyIdBrand]);
     }
 
     public function product($category, $product = null)
@@ -114,7 +117,8 @@ class MainController extends Controller
         $products = Product::where('name', 'ilike', '%' . $search . '%')
             ->orWhere('description', 'ilike', '%' . $search . '%')
             ->paginate(6)->withPath('?' . $request->getQueryString());
-        return view('search', compact(['products', 'search']));
+        $propertyIdBrand = Property::where('name', 'бренд')->first()->id;
+        return view('search', compact(['products', 'search', 'propertyIdBrand']));
     }
 
 }

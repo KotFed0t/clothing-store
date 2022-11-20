@@ -57,23 +57,23 @@ class GoogleAuth
 
         $secretkey = $this->_base32Decode($secret);
 
-        // Pack time into binary string
+        // упаковываем время в бинарную строку
         $time = chr(0) . chr(0) . chr(0) . chr(0) . pack('N*', $timeSlice);
-        // Hash it with users secret key
+        // Хешируем это с секретным ключом пользователя
         $hm = hash_hmac('SHA1', $time, $secretkey, true);
-        // Use last nipple of result as index/offset
+        // Берем последние 4 бита как смещение
         $offset = ord(substr($hm, -1)) & 0x0F;
-        // grab 4 bytes of the result
+        // выбираем 4 байта используя смещение
         $hashpart = substr($hm, $offset, 4);
 
-        // Unpak binary value
+        // Распаковываем бинарную строку
         $value = unpack('N', $hashpart);
         $value = $value[1];
-        // Only 32 bits
+        // Берем только 32 бита
         $value = $value & 0x7FFFFFFF;
 
         $modulo = pow(10, $this->_codeLength);
-
+        //выбираем только 6 цифр из получившегося значения
         return str_pad($value % $modulo, $this->_codeLength, '0', STR_PAD_LEFT);
     }
 

@@ -11,15 +11,17 @@ class AdminManagerSupport
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse) $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
     {
         $user = Auth::user();
         if ($user) {//проверка аутентификации
-            if ($user->roles->contains('name', 'admin') || $user->roles->contains('name', 'manager') || $user->roles->contains('name', 'support')) {//проверка роли
+            if ($user->roles->contains('name', 'admin')
+                || $user->roles->contains('name', 'manager')
+                || $user->roles->contains('name', 'support')) {//проверка роли
                 return $next($request);
             };
         }
