@@ -26,7 +26,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'Slayvi555@gmail.com',
             'password' => bcrypt('Admin12345*'),
-            'email_status' => 'verified',
             'phone' => '89995479234',
             'google_auth_secret' => 'Z563CDHHXNVY6RTY'
         ]);
@@ -97,10 +96,10 @@ class DatabaseSeeder extends Seeder
 
         DB::table('product_value')->insert([
             ['product_id' => 1, 'value_id' => 4],
-            ['product_id' => 2, 'value_id' => 2],
-            ['product_id' => 3, 'value_id' => 12],
-            ['product_id' => 4, 'value_id' => 16],
-            ['product_id' => 4, 'value_id' => 17],
+            ['product_id' => 1, 'value_id' => 2],
+            ['product_id' => 1, 'value_id' => 12],
+            ['product_id' => 1, 'value_id' => 16],
+            ['product_id' => 1, 'value_id' => 17],
         ]);
 
     }
